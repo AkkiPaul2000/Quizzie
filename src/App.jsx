@@ -1,36 +1,72 @@
 import React from 'react';
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
-// import Header from './components/common/Header';
 import Login from './components/Auth/Login';
 import Register from './components/Auth/Register';
-// import Dashboard from './components/Dashboard/Dashboard'; // We'll create this later
-// import TakeQuiz from './components/Quiz/TakeQuiz';
-// import QuizResult from './components/Quiz/QuizResult';
+import Dashboard from './components/Dashboard/Dashboard'; // We'll create this later
+import TakeQuiz from './components/Quiz/TakeQuiz';
+import QuizResult from './components/Quiz/QuizResult';
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-import Home from './Home';
-import { AuthProvider } from './utils/auth';
+import { AuthProvider, useAuth } from './utils/auth';
+import Header from './components/common/Header';
+import CreateQuiz from './components/Dashboard/CreateQuizModal';
+import QuizAnalytics from './components/Dashboard/QuizAnalytics';
+import './App.css'
+
 
 function App() {
+
+  const ProtectedRoute = ({ children }) => {
+    const { isLoggedIn } = useAuth(); // Add this line to access the context
+  
+    if (!isLoggedIn) {
+      return <Navigate to="/login" replace />;
+    }
+    return children;
+  };
   return (
+    <div style={{backgroundColor:'black',display:'flex'}}>
       <AuthProvider >
-    <Router>
-      {/* <Header /> */}
-      <ToastContainer /> 
-      <Routes>
-        {/* <Route path="/" element={<Home />} /> */}
-        <Route path="/" element={<Navigate to="/register" replace />} /> {/* Redirect to /home */}
+      <Router>
+       <Header />
+        <ToastContainer /> 
+        <Routes>
+          <Route path="/" element={<Navigate to="/dashboard" replace />} /> {/* Redirect to /home */}
 
-        <Route path="/login" element={<Login />} />
-        <Route path="/register" element={<Register />} />
-        {/* <Route path="/dashboard" element={<Dashboard />} /> 
-        <Route path="/quiz/:id" element={<TakeQuiz />} />
-        <Route path="/quiz/result/:id" element={<QuizResult />} />  */}
-        {/* Add other routes as needed */}
-      </Routes>
-    </Router>
+          <Route path="/login" element={<Login />} />
+          <Route path="/register" element={<Register />} />
+          {/* <Route path="/dashboard" element={<Dashboard />} /> */}
+
+          <Route
+              path="/dashboard"
+              element={
+                <ProtectedRoute>
+                  <Dashboard />
+                </ProtectedRoute>
+              }/>
+          <Route // Protected route for Create Quiz
+              path="/createQuiz"
+              element={
+                <ProtectedRoute>
+                  <CreateQuiz />
+                </ProtectedRoute>
+              }
+            />
+          <Route // Protected route for Create Quiz
+              path="/analytics"
+              element={
+                <ProtectedRoute>
+                  <QuizAnalytics />
+                </ProtectedRoute>
+              }
+            />
+          <Route path="/quiz/:id" element={<TakeQuiz />} />
+          {/* <Route path="/quiz/result/:id" element={<QuizResult />} />  */}
+          {/* Add other routes as needed */}
+        </Routes>
+      </Router>
     </AuthProvider>
-
+    </div>
   );
 }
 
