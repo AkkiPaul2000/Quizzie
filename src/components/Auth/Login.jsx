@@ -4,9 +4,10 @@ import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import { toast } from 'react-toastify';
 import { useAuth } from '../../utils/auth';
+import { BACKEND_URL } from '../../utils/constant';
 
 const Login = () => {
-  const [username, setUsername] = useState('');
+  const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const navigate = useNavigate();
   const { login } = useAuth();
@@ -14,7 +15,7 @@ const Login = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const response = await axios.post('/api/auth/login', { username, password });
+      const response = await axios.post(`${BACKEND_URL}/api/auth/login`, { email, password });
       login(response.data.token); // Call the login function from useAuth
       toast.success('Login successful!');
       navigate('/dashboard');
@@ -26,13 +27,13 @@ const Login = () => {
   return (
     <form onSubmit={handleSubmit}>
        <div className="form-group">
-          <label htmlFor="username">Username:</label>
+          <label htmlFor="email">Email:</label>
           <input 
             type="text" 
-            id="username"   
+            id="Email"   
  
-            value={username} 
-            onChange={(e) => setUsername(e.target.value)} 
+            value={email} 
+            onChange={(e) => setEmail(e.target.value)} 
             required 
           />
         </div>

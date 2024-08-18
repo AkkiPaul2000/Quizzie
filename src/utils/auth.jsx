@@ -1,27 +1,20 @@
-// src/utils/auth.js
 import React, { createContext, useContext, useState } from 'react';
-import jwt_decode from 'jwt-decode';
-
+import { jwtDecode } from 'jwt-decode'; // Import the jwtDecode function
 const AuthContext = createContext();
 
 export const AuthProvider = ({ children }) => {
-  const [isLoggedIn, setIsLoggedIn] = useState(() => {
-    const token = localStorage.getItem('token');
-    return token ? true : false;
-  });
-  const [user, setUser] = useState(() => {
-    const token = localStorage.getItem('token');
-    return token ? jwt_decode(token) : null;
-  });
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [user, setUser] = useState(null);
 
-  const login = (token) => {
-    localStorage.setItem('token', token);
+  const login = (userData) => {
+    // ... (Store token in localStorage if needed)
     setIsLoggedIn(true);
-    setUser(jwt_decode(token));
+    setUser(userData); 
+    console.log(jwtDecode(userData)  )
   };
 
   const logout = () => {
-    localStorage.removeItem('token');
+    // ... (Remove token from localStorage if needed)
     setIsLoggedIn(false);
     setUser(null);
   };
