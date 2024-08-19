@@ -27,6 +27,7 @@ const CreateQuizModal = ({ onClose }) => {
   const [quizIndex,setQuizIndex]=useState(0)
   const [optionType,setOptionType]=useState("Text")
 
+
   const [quizData, setQuizData] = useState({
     title: '',
     type: 'qna', 
@@ -34,6 +35,14 @@ const CreateQuizModal = ({ onClose }) => {
       { questionText: '', options: ['option1', 'option2'], correctAnswer: 0, timer: 0 },
     ],
   });
+  const handleCorrectAnswerChange = (questionIndex, newCorrectAnswer) => {
+    setQuizData(prevQuizData => {
+      const updatedQuestions = [...prevQuizData.questions];
+      updatedQuestions[questionIndex].correctAnswer = newCorrectAnswer;
+      return { ...prevQuizData, questions: updatedQuestions };
+    });
+  };
+
   const handleClose=()=>{
     setQuizType(false)
     setQuizData({
@@ -44,7 +53,6 @@ const CreateQuizModal = ({ onClose }) => {
       ],
     })
     onClose();
-        console.log(quizData,quizType)
 
 
   }
@@ -102,14 +110,14 @@ const CreateQuizModal = ({ onClose }) => {
   };
 
   return (
-    <div className="modal"> {/* Add appropriate CSS classes for styling */}
+    <div className="modal">
       <div className="modal-content">
         <span className="close" onClick={handleClose}>&times;</span>
         {/* <h2>Create New Quiz</h2> */}
         <form onSubmit={handleSubmit}>
         {!quizType && (
         <div >
-          <div style={{display:'flex'}}>
+          <div style={{display:'flex',alignItems:'center',justifyContent:'center'}}>
             <input
               type="text"
               id="title"
@@ -122,9 +130,8 @@ const CreateQuizModal = ({ onClose }) => {
             />
           </div>
           <div>
-          <div className='typeButton' style={{margin:'10px 35px',backgroundColor:'yellow'}} >
-            <label htmlFor="type" >Type:</label>
-            
+          <div className='typeButton' >
+                <label htmlFor="type" >Type:</label>
                 <button
                   type="button" 
                   name="type" 
@@ -151,23 +158,45 @@ const CreateQuizModal = ({ onClose }) => {
           className='createQuiz'          
           onClick={()=>{
             setQuizType(!quizType)
-            console.log(quizData)
             }} disabled={!quizData.title || !quizData.type}>Continue</button></div>
           </div>
           )}
           {!!quizType && (
+
+            
+
           <div className='quizList'> 
-            <div className='indexGrp' style={{display:'flex',backgroundColor:'yellow',justifyContent:'flex-start',alignItems:'center',margin:'20px 0px 50px 0px',padding:'0px 10px'}}>
+
+            { /*  number section */}
+            <div className='indexGrp' style={{display:'flex',justifyContent:'flex-start',alignItems:'center',margin:'10px 30px',padding:'0px 10px'}}>
              {quizData.questions.map((question, index) =><div className='quizIndex' style={{cursor:'pointer'}} key={index}>
               {index+1}
              <span className="close" onClick={handleClose}>&times;</span>
              </div> )}
              <div style={{cursor:'pointer'}}><img src={plus} alt="Add" /></div>
-             </div>
+             </div >
+              {/* QNA/Poll Question */}
+              <div style={{display:'flex',alignItems:'center',justifyContent:'center'}}>
+              <input
+              type="text"
+              id="title"
+              name="title"
+              value={quizData.title}
+              onChange={handleInputChange}
+              placeholder='Quiz name'
+              required
+              className='quizName'
+              style={{height:'2.5rem'}}
+            />
+            </div>
+
+              {/* detail section */}
              <div className='quizDetails'>
-              {console.log(quizData.questions[quizIndex])}
-              <div className='typeButton1' style={{margin:'10px 35px'}} >
-            <label htmlFor="type">Option Type :</label>
+              
+              {/* Option Type */}
+              <div className='typeButton1' style={{margin:'10px 50px'}} >
+              <label htmlFor="type" >Option Type</label>
+              <label>
               <label>
                 <input 
                   type="radio" 
@@ -198,9 +227,40 @@ const CreateQuizModal = ({ onClose }) => {
                 />
                 <span className="radio-button" style={{whiteSpace:'nowrap'}}>Text & Image URL</span> 
               </label>
-            
+              </label>
             </div>
              </div>
+            {/* Conditional input rendering */}
+            {/* Text */}
+            {optionType=="Text"  &&
+            <div className='typeFields'  >
+                <div className='optionGroup'>
+                <div className='options'>
+                  {quizData.questions[quizIndex].options.map((opt, optionIndex) => (
+                    <div className='option' key={optionIndex}> 
+                      <label key={optionIndex}> {/* Add key prop to label */}
+                        <input 
+                          type="radio" 
+                          name={`question-${quizIndex}-options`} 
+                          value={optionIndex}
+                          checked={quizData.questions[quizIndex].correctAnswer === optionIndex} 
+                          onChange={() => handleCorrectAnswerChange(quizIndex, optionIndex)} 
+                        />
+                        <span className="radio-button">{opt}</span> 
+                      </label>
+                    </div>
+                  ))}
+                </div>
+                  <div className='timers'>Timer</div>
+                </div>
+              </div>}
+
+            {/* Image */}
+            {optionType=="Image URL"  &&<div className='typeFields' >Image URL</div>}
+
+            {/* Text+URL */}
+            {optionType=="Text & Image URL"  &&<div className='typeFields' >Text & Image URL</div>}
+
              <div className='buttons'><button onClick={handleClose} className='cancel'>Cancel</button>
           <button className='createQuiz' type="submit">Create Quiz</button></div>
           </div>)}
