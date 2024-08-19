@@ -1,12 +1,14 @@
 // src/components/common/CreateQuizModal.jsx
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { toast } from 'react-toastify';
 import axios from 'axios';
 import { BACKEND_URL } from '../../utils/constant';
 import './Dashboard.css'
-import plus from '../../assets/Vector.svg'; // Assuming your SVG is in the 'assets' folder
+import plus from '../../assets/plus.svg'; // Assuming your SVG is in the 'assets' folder
+import bin from '../../assets/bin.svg'; 
 
 const CreateQuizModal = ({ onClose }) => {
+
 //TODO fix this outside click to close the modal
   // const modalRef = useRef(null); // Create a ref to the modal container
 
@@ -23,10 +25,18 @@ const CreateQuizModal = ({ onClose }) => {
 
   //   };
   // }, [onClose]);
-  const [quizType,setQuizType]=useState(false)
+  
+   const [quizType,setQuizType]=useState(false)
   const [quizIndex,setQuizIndex]=useState(0)
   const [optionType,setOptionType]=useState("Text")
 
+  const handleQuestionTextChange = (questionIndex, newQuestionText) => {
+    setQuizData(prevQuizData => {
+      const updatedQuestions = [...prevQuizData.questions];
+      updatedQuestions[questionIndex].questionText = newQuestionText;
+      return { ...prevQuizData, questions: updatedQuestions };
+    });
+  };
 
   const [quizData, setQuizData] = useState({
     title: '',
@@ -35,7 +45,11 @@ const CreateQuizModal = ({ onClose }) => {
       { questionText: '', options: ['option1', 'option2'], correctAnswer: 0, timer: 0 },
     ],
   });
+  const currentOptionsLength = quizData.questions[quizIndex].options.length;
+
+
   const handleCorrectAnswerChange = (questionIndex, newCorrectAnswer) => {
+    // console.log(questionIndex,newCorrectAnswer)
     setQuizData(prevQuizData => {
       const updatedQuestions = [...prevQuizData.questions];
       updatedQuestions[questionIndex].correctAnswer = newCorrectAnswer;
@@ -59,11 +73,44 @@ const CreateQuizModal = ({ onClose }) => {
   const handleOptionType=(e)=>{
     setOptionType(e.target.value)
   }
+
+  const handleTimerChange = (e,questionIndex, newTimerValue) => {
+    e.preventDefault();
+
+    setQuizData(prevQuizData => {
+      const updatedQuestions = [...prevQuizData.questions];
+      updatedQuestions[questionIndex].timer = newTimerValue;
+      return { ...prevQuizData, questions: updatedQuestions };
+    });
+  };
+  
   
   const handleInputChange = (e) => {
     setQuizData({ ...quizData, [e.target.name]: e.target.value });
   };
-
+  const handleOptionTextChange = (questionIndex, optionIndex, newOptionText) => {
+    setQuizData(prevQuizData => {
+      const updatedQuestions = [...prevQuizData.questions];
+      updatedQuestions[questionIndex].options[optionIndex] = newOptionText;
+      return { ...prevQuizData, questions: updatedQuestions };
+    });
+  };  
+  const handleAddOption = () => {
+    console.log("Yo");
+  
+    if (quizData.questions[quizIndex].options.length < 4) { 
+      setQuizData(prevQuizData => ({
+        ...prevQuizData,
+        questions: prevQuizData.questions.map((question, index) => 
+          index === quizIndex 
+            ? { ...question, options: [...question.options, ''] } 
+            : question
+        )
+      }));
+    } else {
+      toast.warning('You can only have a maximum of 4 options per question.');
+    }
+  };
   const handleQuestionChange = (index, field, value) => {
     const updatedQuestions = [...quizData.questions];
     updatedQuestions[index][field] = value;
@@ -90,9 +137,28 @@ const CreateQuizModal = ({ onClose }) => {
     setQuizData({ ...quizData, questions: updatedQuestions });
   };
 
+  const handleRemoveOption = (questionIndex, optionIndex) => {
+    setQuizData(prevQuizData => {
+      const updatedQuestions = prevQuizData.questions.map((question, index) => {
+        if (index === questionIndex) {
+          const updatedOptions = [...question.options];
+          updatedOptions.splice(optionIndex, 1); // Remove the option at the specified index
+          return {
+            ...question,
+            options: updatedOptions 
+          };
+        }
+        return question;
+      });
+      return { ...prevQuizData, questions: updatedQuestions };
+    });
+  };
+
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     // Basic validation (you can add more as needed)
+    // console.log(quizData)
     if (!quizData.title || quizData.questions.some(q => !q.questionText)) {
       toast.error('Please fill in all required fields.');
       return;
@@ -161,19 +227,18 @@ const CreateQuizModal = ({ onClose }) => {
             }} disabled={!quizData.title || !quizData.type}>Continue</button></div>
           </div>
           )}
+
+
           {!!quizType && (
-
-            
-
           <div className='quizList'> 
 
             { /*  number section */}
             <div className='indexGrp' style={{display:'flex',justifyContent:'flex-start',alignItems:'center',margin:'10px 30px',padding:'0px 10px'}}>
-             {quizData.questions.map((question, index) =><div className='quizIndex' style={{cursor:'pointer'}} key={index}>
+             {quizData.questions.map((question, index) =><div className='quizIndex' style={{cursor:'pointer'}} key={index} onClick={()=>setQuizIndex(index)}>
               {index+1}
-             <span className="close" onClick={handleClose}>&times;</span>
+             {index>0 && <span className="close" onClick={()=>handleRemoveQuestion(index)}>&times;</span>}
              </div> )}
-             <div style={{cursor:'pointer'}}><img src={plus} alt="Add" /></div>
+             <div style={{cursor:'pointer'}} onClick={handleAddQuestion}><img src={plus} alt="Add" /></div>
              </div >
               {/* QNA/Poll Question */}
               <div style={{display:'flex',alignItems:'center',justifyContent:'center'}}>
@@ -181,9 +246,9 @@ const CreateQuizModal = ({ onClose }) => {
               type="text"
               id="title"
               name="title"
-              value={quizData.title}
-              onChange={handleInputChange}
-              placeholder='Quiz name'
+              value={quizData.questions[quizIndex].questionText}
+              onChange={(e) => handleQuestionTextChange(quizIndex, e.target.value)}
+              placeholder={`${quizData.type} Question`  }
               required
               className='quizName'
               style={{height:'2.5rem'}}
@@ -238,20 +303,43 @@ const CreateQuizModal = ({ onClose }) => {
                 <div className='options'>
                   {quizData.questions[quizIndex].options.map((opt, optionIndex) => (
                     <div className='option' key={optionIndex}> 
-                      <label key={optionIndex}> {/* Add key prop to label */}
-                        <input 
-                          type="radio" 
-                          name={`question-${quizIndex}-options`} 
-                          value={optionIndex}
-                          checked={quizData.questions[quizIndex].correctAnswer === optionIndex} 
-                          onChange={() => handleCorrectAnswerChange(quizIndex, optionIndex)} 
+                      <label key={optionIndex}>
+                      <input 
+                        type="radio" 
+                        name={`question-${quizIndex}-options`} 
+                        value={optionIndex}
+                        checked={quizData.questions[quizIndex].correctAnswer === optionIndex} 
+                        onChange={() => handleCorrectAnswerChange(quizIndex, optionIndex)} 
+                      />
+                      <span className="radio-button">
+                        <input // Add an input field for editing
+                          type="text"
+                          value={opt}
+                          onChange={(e) => handleOptionTextChange(quizIndex, optionIndex, e.target.value)}
                         />
-                        <span className="radio-button">{opt}</span> 
-                      </label>
+                      </span> 
+                      {optionIndex>1 && <img style={{marginLeft:10,cursor:'pointer'}}src={bin} alt="Add" onClick={() => handleRemoveOption(quizIndex, optionIndex)} />}
+                    </label>
                     </div>
                   ))}
+                  {currentOptionsLength < 4 && ( // Use currentOptionsLength in the condition
+                      <button onClick={handleAddOption} >
+                        Add Option
+                      </button>
+                    )}
                 </div>
-                  <div className='timers'>Timer</div>
+                  <div className='timers'>
+                    <span>Timer</span>
+                    <button style={{height:5}} className={quizData.questions[quizIndex].timer==0?'timer-active':''}
+                    onClick={(e) => handleTimerChange(e,quizIndex, 0)}
+                    >OFF</button>
+                    <button className={quizData.questions[quizIndex].timer==5?'timer-active':''}
+                    onClick={(e) => handleTimerChange(e,quizIndex, 5)}
+                    >5sec</button>
+                    <button className={quizData.questions[quizIndex].timer==10?'timer-active':''}
+                    onClick={(e) => handleTimerChange(e,quizIndex, 10)}
+                    >10sec</button>
+                  </div>
                 </div>
               </div>}
 

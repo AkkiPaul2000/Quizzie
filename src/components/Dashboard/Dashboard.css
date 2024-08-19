@@ -124,10 +124,6 @@
     cursor: pointer;
 }
 
-button {
-    cursor: pointer;
-}
-
 input[type="button"]:disabled,
 button:disabled {
     background-color: lightgray;
@@ -143,6 +139,10 @@ button:disabled {
     display: flex;
     height: 46.14px;
     margin: 25px 0px;
+}
+
+button {
+    cursor: pointer;
 }
 
 .buttons button {
@@ -182,30 +182,90 @@ button:disabled {
 }
 
 .typeFields .optionGroup {
-    background-color: blue;
     flex: 0.9;
     display: flex;
 }
 
 .typeFields .optionGroup .options {
-    flex: 4;
-    background-color: yellow;
+    flex: 3;
     display: flex;
-    align-items: center;
-    justify-content: flex-start;
     flex-direction: column;
+    justify-content: flex-start;
 }
 
 .typeFields .optionGroup .options .option {
-    flex: 1;
-    background-color: #FFFFFF;
     color: black;
+    flex: 1;
+    display: flex;
+    flex-direction: row;
 }
+
+.typeFields .optionGroup .options .option label {
+    display: flex;
+    flex: 1;
+    /* Use flexbox for layout */
+    align-items: center;
+    /* Vertically align items to the center */
+}
+
+.option input[type="radio"] {
+    margin-right: 10px;
+    /* Add some space between the radio button and the input */
+}
+
+.option input[type="radio"]:checked+.radio-button input[type="text"] {
+    background: #60B84B;
+    color: #FFFFFF;
+}
+
+.option input[type="text"] {
+    flex: 1;
+    display: flex;
+    padding: 5px 50px;
+    border: 1px solid #ccc;
+    margin: 10px;
+    height: 30px;
+    border-radius: 10px;
+    cursor: pointer;
+    box-shadow: 0px 0px 25px 0px #00000026;
+    font-weight: 500;
+    color: #9F9F9F;
+    justify-content: center;
+    align-items: center;
+}
+
+
+/* Allow the input to grow and take up available space */
 
 .typeFields .optionGroup .timers {
     flex: 1;
     display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    flex-direction: column;
+    margin-top: 3rem;
+}
+
+.typeFields .optionGroup .timers button {
+    font-weight: 400;
+    font-size: 11px;
+    flex: 1;
+    margin: 3px 0px;
+    border-radius: 10px;
+    box-shadow: 0px 0px 15px 0px #00000026;
+    border: #FFFFFF;
+    background-color: #FFFFFF;
+    padding: 0px 30px;
+    height: 25px;
+    /* Adjust this value to your desired height */
+    color: #9F9F9F;
+}
+
+.typeFields .optionGroup .timers span {
+    color: #9F9F9F;
+}
+
+.typeFields .optionGroup .timers .timer-active {
     background-color: green;
-    align-items: flex-end;
-    justify-content: center;
+    color: white;
 }
