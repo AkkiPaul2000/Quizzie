@@ -7,7 +7,7 @@ import CreateQuizModal from '../Dashboard/CreateQuizModal';
 const Header = () => {
   const { isLoggedIn, logout,user } = useAuth();
   const [isModalOpen, setIsModalOpen] = useState(false);
-  console.log("User",user)
+  // console.log("User",user)
   const handleCreateQuizClick = () => {
     setIsModalOpen(true);
   };
@@ -16,7 +16,7 @@ const Header = () => {
     setIsModalOpen(false);
   };
   return (
-    <header style={{backgroundColor:'yellow'}}>
+    <header style={{backgroundColor:'#FFFFFF',flex:isLoggedIn?0.5:0}}>
       {isLoggedIn && <nav>
         <ul>
           <li><Link to="/dashboard">Dashboard</Link></li>

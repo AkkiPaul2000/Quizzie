@@ -25,12 +25,12 @@ function App() {
     return children;
   };
   return (
-    <div style={{backgroundColor:'black',display:'flex'}}>
+    <div style={{backgroundColor:'red',display:'flex',flex:1,height:'100vh'}}>
       <AuthProvider >
       <Router>
        <Header />
         <ToastContainer /> 
-        <Routes>
+        <div style={{display:'flex',flex:3,backgroundColor:'#EDEDED'}}><Routes>
           <Route path="/" element={<Navigate to="/dashboard" replace />} /> {/* Redirect to /home */}
 
           <Route path="/login" element={<Login />} />
@@ -64,6 +64,7 @@ function App() {
           {/* <Route path="/quiz/result/:id" element={<QuizResult />} />  */}
           {/* Add other routes as needed */}
         </Routes>
+        </div>
       </Router>
     </AuthProvider>
     </div>

@@ -2,16 +2,56 @@
 import React, { useState } from 'react';
 import { toast } from 'react-toastify';
 import axios from 'axios';
+import { BACKEND_URL } from '../../utils/constant';
+import './Dashboard.css'
+import plus from '../../assets/Vector.svg'; // Assuming your SVG is in the 'assets' folder
 
 const CreateQuizModal = ({ onClose }) => {
+//TODO fix this outside click to close the modal
+  // const modalRef = useRef(null); // Create a ref to the modal container
+
+  // useEffect(() => {
+  //   const handleClickOutside = (event) => {
+  //     if (modalRef.current && !modalRef.current.contains(event.target)) {
+  //       onClose(); // Close the modal if clicked outside
+  //     }
+  //   };
+
+  //   document.addEventListener('mousedown', handleClickOutside);
+  //   return () => {
+  //     document.removeEventListener('mousedown', handleClickOutside);   
+
+  //   };
+  // }, [onClose]);
+  const [quizType,setQuizType]=useState(false)
+  const [quizIndex,setQuizIndex]=useState(0)
+  const [optionType,setOptionType]=useState("Text")
+
   const [quizData, setQuizData] = useState({
     title: '',
     type: 'qna', 
     questions: [
-      { questionText: '', options: ['', '', '', ''], correctAnswer: '', timer: 0 },
+      { questionText: '', options: ['option1', 'option2'], correctAnswer: 0, timer: 0 },
     ],
   });
+  const handleClose=()=>{
+    setQuizType(false)
+    setQuizData({
+      title: '',
+      type: 'qna', 
+      questions: [
+        { questionText: '', options: ['option1', 'option2'], correctAnswer: 0, timer: 0 },
+      ],
+    })
+    onClose();
+        console.log(quizData,quizType)
 
+
+  }
+  const handleOptionType=(e)=>{
+    setOptionType(e.target.value)
+  }
+  
   const handleInputChange = (e) => {
     setQuizData({ ...quizData, [e.target.name]: e.target.value });
   };
@@ -28,7 +68,7 @@ const CreateQuizModal = ({ onClose }) => {
         ...quizData,
         questions: [
           ...quizData.questions,
-          { questionText: '', options: ['', '', '', ''], correctAnswer: '', timer: 0 },
+          { questionText: '', options: ['option1', 'option2'], correctAnswer: 0, timer: 0 },
         ],
       });
     } else {
@@ -44,7 +84,6 @@ const CreateQuizModal = ({ onClose }) => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-
     // Basic validation (you can add more as needed)
     if (!quizData.title || quizData.questions.some(q => !q.questionText)) {
       toast.error('Please fill in all required fields.');
@@ -52,7 +91,7 @@ const CreateQuizModal = ({ onClose }) => {
     }
 
     try {
-      await axios.post('/api/quiz/create', quizData, {
+      await axios.post(`${BACKEND_URL}/api/quiz/create`, quizData, {
         headers: { Authorization: localStorage.getItem('token') },
       });
       toast.success('Quiz created successfully!');
@@ -65,58 +104,106 @@ const CreateQuizModal = ({ onClose }) => {
   return (
     <div className="modal"> {/* Add appropriate CSS classes for styling */}
       <div className="modal-content">
-        <span className="close" onClick={onClose}>&times;</span>
-        <h2>Create New Quiz</h2>
+        <span className="close" onClick={handleClose}>&times;</span>
+        {/* <h2>Create New Quiz</h2> */}
         <form onSubmit={handleSubmit}>
-          <div>
-            <label htmlFor="title">Title:</label>
+        {!quizType && (
+        <div >
+          <div style={{display:'flex'}}>
             <input
               type="text"
               id="title"
               name="title"
               value={quizData.title}
               onChange={handleInputChange}
+              placeholder='Quiz name'
               required
+              className='quizName'
             />
           </div>
           <div>
-            <label htmlFor="type">Type:</label>
-            <select
-              id="type"
-              name="type"
-              value={quizData.type}
-              onChange={handleInputChange}
-            >
-              <option value="qna">Q&A</option>
-              <option value="poll">Poll</option>
-            </select>
-          </div>
-
-          {/* Questions section */}
-          {quizData.questions.map((question, index) => (
-            <div key={index}>
-              <h3>Question {index + 1}</h3>
-              <div>
-                <label htmlFor={`questionText-${index}`}>Question:</label>
-                <input
-                  type="text"
-                  id={`questionText-${index}`}
-                  name="questionText"
-                  value={question.questionText}
-                  onChange={(e) => handleQuestionChange(index, 'questionText', e.target.value)}
-                  required
-                />
-              </div>
-              {/* ... options, correctAnswer (if Q&A), timer input fields */}
-              <button type="button" onClick={() => handleRemoveQuestion(index)}>
-                Remove Question
-              </button>
+          <div className='typeButton' style={{margin:'10px 35px',backgroundColor:'yellow'}} >
+            <label htmlFor="type" >Type:</label>
+            
+                <button
+                  type="button" 
+                  name="type" 
+                  className={`type-button ${quizData.type === 'qna' ? 'active' : ''}`} 
+                  onClick={() => setQuizData({ ...quizData, type: 'qna' })}
+                >
+                  Q&A
+                </button>
+                <button 
+                  type="button" 
+                  name="type" 
+                  className={`type-button ${quizData.type === 'poll' ? 'active' : ''}`} 
+                  onClick={() => setQuizData({ ...quizData, type: 'poll' })}
+                >
+                  Poll Type
+                </button>
+           
             </div>
-          ))}
-          <button type="button" onClick={handleAddQuestion}>
-            Add Question
-          </button>
-          <button type="submit">Create Quiz</button>
+          </div>
+          <div className='buttons'>
+            <button onClick={handleClose} className='cancel'>Cancel</button>
+          <button
+          // className={(!quizData.title || !quizData.type)?'disabled':'createQuiz'}
+          className='createQuiz'          
+          onClick={()=>{
+            setQuizType(!quizType)
+            console.log(quizData)
+            }} disabled={!quizData.title || !quizData.type}>Continue</button></div>
+          </div>
+          )}
+          {!!quizType && (
+          <div className='quizList'> 
+            <div className='indexGrp' style={{display:'flex',backgroundColor:'yellow',justifyContent:'flex-start',alignItems:'center',margin:'20px 0px 50px 0px',padding:'0px 10px'}}>
+             {quizData.questions.map((question, index) =><div className='quizIndex' style={{cursor:'pointer'}} key={index}>
+              {index+1}
+             <span className="close" onClick={handleClose}>&times;</span>
+             </div> )}
+             <div style={{cursor:'pointer'}}><img src={plus} alt="Add" /></div>
+             </div>
+             <div className='quizDetails'>
+              {console.log(quizData.questions[quizIndex])}
+              <div className='typeButton1' style={{margin:'10px 35px'}} >
+            <label htmlFor="type">Option Type :</label>
+              <label>
+                <input 
+                  type="radio" 
+                  name="type" 
+                  value="Text" 
+                  checked={optionType === 'Text'}
+                  onChange={handleOptionType} 
+                />
+                <span className="radio-button">Text</span>
+              </label>
+              <label>
+                <input 
+                  type="radio" 
+                  name="type" 
+                  value="Image URL" 
+                  checked={optionType === 'Image URL'}
+                  onChange={handleOptionType} 
+                />
+                <span className="radio-button" style={{whiteSpace:'nowrap'}}>Image URL</span> 
+              </label>
+              <label>
+                <input 
+                  type="radio" 
+                  name="type" 
+                  value="Text & Image URL" 
+                  checked={optionType === 'Text & Image URL'}
+                  onChange={handleOptionType} 
+                />
+                <span className="radio-button" style={{whiteSpace:'nowrap'}}>Text & Image URL</span> 
+              </label>
+            
+            </div>
+             </div>
+             <div className='buttons'><button onClick={handleClose} className='cancel'>Cancel</button>
+          <button className='createQuiz' type="submit">Create Quiz</button></div>
+          </div>)}
         </form>
       </div>
     </div>

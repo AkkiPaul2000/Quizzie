@@ -1,0 +1,181 @@
+.radio-button {
+    display: flex; 
+    /* padding: 7px 50px; */
+    /* border: 1px solid #ccc; */
+    /* border-radius: 10px; */
+    background-color: #FFFFFF;
+    cursor: pointer;
+    /* box-shadow: 0px 0px 25px 0px #00000026; */
+    
+    font-weight: 500;
+    color: #9F9F9F;
+  }
+  .type-button {
+    /* ... your default button styles ... */
+    background-color: #FFFFFF;
+    display: flex; 
+    padding: 7px 50px;
+    /* border: 1px solid #ccc; */
+    border-radius: 10px;
+    background-color: #FFFFFF;
+    cursor: pointer;
+    box-shadow: 0px 0px 25px 0px #00000026;
+    
+    font-weight: 500;
+    color: #9F9F9F;
+  }
+  
+  .type-button.active {
+    background-color: #60B84B; /* Or any color you prefer */
+    color: #FFFFFF;
+  }
+
+  .typeButton{
+    display: flex;
+    color: yellow;
+    justify-content: center;
+    align-items: center;
+  }
+  .typeButton button{
+    display: flex;
+    flex: 1;
+    justify-content: center;
+    align-items: center;
+    font-weight: 500;
+    border: 1px solid #ccc;
+    border-radius: 10px;
+    margin: 0px 80px;
+    box-shadow: 0px 0px 25px 0px #00000026;
+    text-wrap: nowrap;
+  }
+  .typeButton label{
+    display: flex;
+    flex: 1;
+    /* background-color: red; */
+    justify-content: center;
+    align-items: center;
+    font-weight: 500;
+    color: #9F9F9F;
+  }
+  .typeButton1 label{
+    display: flex;
+    flex: 1;
+    /* background-color: red; */
+    justify-content: center;
+    align-items: center;
+    font-weight: 500;
+    /* color: #9F9F9F; */
+  }
+
+  
+
+  .quizName{
+    border-radius: 10px;
+    height: 4rem;
+    flex: 1;
+    margin: 10px 20px;
+    border: #FFFFFF;
+    box-shadow: 0px 0px 25px 0px #00000026;
+    font-size: 16px;
+    font-weight: 500;
+    color: #9F9F9F;
+  }
+
+  .quizName {
+    /* Placeholder color */
+    &::placeholder {
+        color: #9F9F9F;
+    }
+
+    /* Left margin for text */
+    padding-left: 20px; /* Adjust as needed */
+
+    /* Border removal on focus */
+    &:focus {
+        outline: none; /* Remove default outline */
+        border: none;  /* Remove any existing border */
+    }
+}
+
+  .typeButton div{
+    flex: 1;
+  }
+  
+  .quizIndex{
+    font-size:'20px';
+    width: 20px; /* Adjust the size as needed */
+    height: 20px;
+    border-radius: 50%; /* Creates the circular shape */
+    border:2px solid #FFFFFF;
+    display: flex; /* Use flexbox for easy centering */
+    justify-content: center;
+    align-items: center;
+    margin: 0px 20px;
+    padding: 10px; /* Add padding inside the circle */
+    box-shadow: 0px 0px 10px 0px #00000026;
+    color: #9F9F9F;
+    position: relative;
+  }
+  .quizIndex .close {
+    color: black;
+    position: absolute;
+    top: -11px; /* Adjust as needed for vertical positioning */
+    right: 0px; /* Adjust as needed for horizontal positioning */
+    font-weight: 300;
+    font-size: 22px;
+  }
+  
+  .quizIndex .close:hover,
+.quizIndex .close:focus {
+  color: #aaa;
+  text-decoration: none;
+  cursor: pointer;
+}
+
+  button{
+    cursor: pointer;
+  }
+  input[type="button"]:disabled, 
+button:disabled {
+  background-color: lightgray;
+  color: gray;
+  cursor: not-allowed; 
+}
+  .cancel{
+    background-color: #FFFFFF;
+  }
+  .buttons{
+    display: flex;
+    height: 46.14px;
+    margin: 25px 0px;
+  }
+  .buttons button{
+    font-weight: 600;
+    font-size: 15px;
+    flex: 1;
+    margin: 5px 30px;
+    border-radius: 10px;
+    opacity: 0px;
+    box-shadow: 0px 0px 15px 0px #00000040;
+    
+    border: #FFFFFF;
+
+  }
+    .createQuiz{
+        background-color:#60B84B;
+        color: #FFFFFF;
+  }
+
+  .quizList{
+    display: flex;
+    flex-direction: column;
+    /* background-color: red; */
+  }
+  
+  .typeButton1{
+
+    display: flex;
+    color: white;
+    justify-content: center;
+    align-items: center;
+  }
