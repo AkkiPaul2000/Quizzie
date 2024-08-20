@@ -42,7 +42,7 @@ const CreateQuizModal = ({ onClose }) => {
     title: '',
     type: 'qna', 
     questions: [
-      { questionText: '', options: ['option1', 'option2'], correctAnswer: 0, timer: 0 },
+      { questionText: '', options: ['', ''], correctAnswer: 0, timer: 0,type:'Text' },
     ],
   });
   const currentOptionsLength = quizData.questions[quizIndex].options.length;
@@ -63,7 +63,7 @@ const CreateQuizModal = ({ onClose }) => {
       title: '',
       type: 'qna', 
       questions: [
-        { questionText: '', options: ['option1', 'option2'], correctAnswer: 0, timer: 0 },
+        { questionText: '', options: ['', ''], correctAnswer: 0, timer: 0,type:"text" },
       ],
     })
     onClose();
@@ -158,10 +158,18 @@ const CreateQuizModal = ({ onClose }) => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     // Basic validation (you can add more as needed)
-    // console.log(quizData)
+    console.log(quizData)
     if (!quizData.title || quizData.questions.some(q => !q.questionText)) {
       toast.error('Please fill in all required fields.');
       return;
+    }
+    const hasEmptyOptions = quizData.questions.some(question => 
+      question.options.some(option => option.trim() === '')
+    );
+  
+    if (hasEmptyOptions) {
+      toast.error('Please fill in all option fields.');
+      return; 
     }
 
     try {
@@ -297,10 +305,10 @@ const CreateQuizModal = ({ onClose }) => {
              </div>
             {/* Conditional input rendering */}
             {/* Text */}
-            {optionType=="Text"  &&
+            
             <div className='typeFields'  >
                 <div className='optionGroup'>
-                <div className='options'>
+                {optionType=="Text"  &&(<div className='options'>
                   {quizData.questions[quizIndex].options.map((opt, optionIndex) => (
                     <div className='option' key={optionIndex}> 
                       <label key={optionIndex}>
@@ -318,7 +326,7 @@ const CreateQuizModal = ({ onClose }) => {
                           onChange={(e) => handleOptionTextChange(quizIndex, optionIndex, e.target.value)}
                         />
                       </span> 
-                      {optionIndex>1 && <img style={{marginLeft:10,cursor:'pointer'}}src={bin} alt="Add" onClick={() => handleRemoveOption(quizIndex, optionIndex)} />}
+                      {optionIndex>1 && <img style={{marginLeft:10,cursor:'pointer'}}src={bin} alt="delete" onClick={() => handleRemoveOption(quizIndex, optionIndex)} />}
                     </label>
                     </div>
                   ))}
@@ -327,7 +335,45 @@ const CreateQuizModal = ({ onClose }) => {
                         Add Option
                       </button>
                     )}
-                </div>
+                </div>)}
+                {optionType === "Image URL" && (
+                    <div className='options'>
+                      {quizData.questions[quizIndex].options.map((opt, optionIndex) => (
+                        <div className='option' key={optionIndex}>
+                          <label key={optionIndex}>
+                            <input
+                              type="radio"
+                              name={`question-${quizIndex}-options`}
+                              value={optionIndex}
+                              checked={quizData.questions[quizIndex].correctAnswer === optionIndex}
+                              onChange={() => handleCorrectAnswerChange(quizIndex, optionIndex)}
+                            />
+                            <span className="radio-button">
+                              <input // Input field for image URLs
+                                type="url" // Change to 'url' for URL validation
+                                value={opt}
+                                onChange={(e) => handleOptionTextChange(quizIndex, optionIndex, e.target.value)}
+                                placeholder="Enter image URL"
+                              />
+                            </span>
+                            {optionIndex > 1 && (
+                              <img
+                                style={{ marginLeft: 10, cursor: 'pointer' }}
+                                src={bin}
+                                alt="delete"
+                                onClick={() => handleRemoveOption(quizIndex, optionIndex)}
+                              />
+                            )}
+                          </label>
+                        </div>
+                      ))}
+                      {currentOptionsLength < 4 && (
+                        <button onClick={handleAddOption}>
+                          Add Option
+                        </button>
+                      )}
+                    </div>
+                  )}
                   <div className='timers'>
                     <span>Timer</span>
                     <button style={{height:5}} className={quizData.questions[quizIndex].timer==0?'timer-active':''}
@@ -341,10 +387,19 @@ const CreateQuizModal = ({ onClose }) => {
                     >10sec</button>
                   </div>
                 </div>
-              </div>}
+              </div>
+           
 
             {/* Image */}
-            {optionType=="Image URL"  &&<div className='typeFields' >Image URL</div>}
+
+
+            {/* {optionType=="Image URL"  &&
+            <div className='typeFields' >Image URL</div>} */}
+
+
+
+
+
 
             {/* Text+URL */}
             {optionType=="Text & Image URL"  &&<div className='typeFields' >Text & Image URL</div>}
