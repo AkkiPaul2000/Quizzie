@@ -107,9 +107,13 @@
 }
 
 .quizIndex .close {
+    display: flex;
+    align-items: center;
+    justify-content: center;
     color: black;
+    background-color: red;
     position: absolute;
-    top: -11px;
+    top: -4px;
     /* Adjust as needed for vertical positioning */
     right: 0px;
     /* Adjust as needed for horizontal positioning */

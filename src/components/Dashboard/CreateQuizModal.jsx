@@ -6,6 +6,7 @@ import { BACKEND_URL } from '../../utils/constant';
 import './Dashboard.css'
 import plus from '../../assets/plus.svg'; // Assuming your SVG is in the 'assets' folder
 import bin from '../../assets/bin.svg'; 
+import cross from '../../assets/cross.svg'; 
 
 const CreateQuizModal = ({ onClose }) => {
 
@@ -276,7 +277,7 @@ const CreateQuizModal = ({ onClose }) => {
             <div className='indexGrp' style={{display:'flex',justifyContent:'flex-start',alignItems:'center',margin:'10px 30px',padding:'0px 10px'}}>
              {quizData.questions.map((question, index) =><div className='quizIndex'  key={index} >
               <span style={{cursor:'pointer'}} onClick={()=>setQuizIndex(index)}>{index+1}</span>
-             {index>0 && <span className="close" onClick={()=>handleRemoveQuestion(index)}>&times;</span>}
+             {index>0 && <span className="close" onClick={()=>handleRemoveQuestion(index)} ><img src={cross} alt="remove" /></span>}
              </div> )}
              <div style={{cursor:'pointer'}} onClick={handleAddQuestion}><img src={plus} alt="Add" /></div>
              </div >
