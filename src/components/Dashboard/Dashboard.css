@@ -110,10 +110,8 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    color: black;
-    background-color: red;
     position: absolute;
-    top: -4px;
+    top: -2px;
     /* Adjust as needed for vertical positioning */
     right: 0px;
     /* Adjust as needed for horizontal positioning */
@@ -124,6 +122,16 @@
 .quizIndex .close:hover,
 .quizIndex .close:focus {
     color: #aaa;
+    filter: invert(70%);
+    /* Or any other filter you like */
+    text-decoration: none;
+    cursor: pointer;
+}
+
+.plus:hover,
+.plus:focus {
+    filter: invert(100%);
+    /* Or any other filter you like */
     text-decoration: none;
     cursor: pointer;
 }

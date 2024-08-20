@@ -277,9 +277,9 @@ const CreateQuizModal = ({ onClose }) => {
             <div className='indexGrp' style={{display:'flex',justifyContent:'flex-start',alignItems:'center',margin:'10px 30px',padding:'0px 10px'}}>
              {quizData.questions.map((question, index) =><div className='quizIndex'  key={index} >
               <span style={{cursor:'pointer'}} onClick={()=>setQuizIndex(index)}>{index+1}</span>
-             {index>0 && <span className="close" onClick={()=>handleRemoveQuestion(index)} ><img src={cross} alt="remove" /></span>}
+             {index>0 && <img src={cross} className="close"  alt="remove" onClick={()=>handleRemoveQuestion(index)}  />}
              </div> )}
-             <div style={{cursor:'pointer'}} onClick={handleAddQuestion}><img src={plus} alt="Add" /></div>
+             <div style={{cursor:'pointer',}} className='plus' onClick={handleAddQuestion}><img src={plus} alt="Add" /></div>
              </div >
               {/* QNA/Poll Question */}
               <div style={{display:'flex',alignItems:'center',justifyContent:'center'}}>
@@ -407,6 +407,7 @@ const CreateQuizModal = ({ onClose }) => {
                       )}
                     </div>
                   )}
+                  //TODO fix both selected input as green color
                   {optionType === "both" && (
                     <div className='options'>
                       {quizData.questions[quizIndex].options.map((opt, optionIndex) => (
