@@ -28,7 +28,7 @@ const CreateQuizModal = ({ onClose }) => {
   
    const [quizType,setQuizType]=useState(false)
   const [quizIndex,setQuizIndex]=useState(0)
-  const [optionType,setOptionType]=useState("Text")
+  const [optionType,setOptionType]=useState("text")
 
   const handleQuestionTextChange = (questionIndex, newQuestionText) => {
     setQuizData(prevQuizData => {
@@ -42,7 +42,7 @@ const CreateQuizModal = ({ onClose }) => {
     title: '',
     type: 'qna', 
     questions: [
-      { questionText: '', options: ['', ''], correctAnswer: 0, timer: 0,type:'Text' },
+      { questionText: '', options: [{ text: '', imageUrl: '' }, { text: '', imageUrl: '' }], correctAnswer: 0, timer: 0,type:'text' },
     ],
   });
   const currentOptionsLength = quizData.questions[quizIndex].options.length;
@@ -63,7 +63,7 @@ const CreateQuizModal = ({ onClose }) => {
       title: '',
       type: 'qna', 
       questions: [
-        { questionText: '', options: ['', ''], correctAnswer: 0, timer: 0,type:"text" },
+        { questionText: '', options: [{ text: '', imageUrl: '' }, { text: '', imageUrl: '' }], correctAnswer: 0, timer: 0,type:"text" },
       ],
     })
     onClose();
@@ -88,12 +88,19 @@ const CreateQuizModal = ({ onClose }) => {
   const handleInputChange = (e) => {
     setQuizData({ ...quizData, [e.target.name]: e.target.value });
   };
-  const handleOptionTextChange = (questionIndex, optionIndex, newOptionText) => {
+  const handleOptionTextChange = (questionIndex, optionIndex, newOptionText,type) => {
+    if(type=="text"){
     setQuizData(prevQuizData => {
       const updatedQuestions = [...prevQuizData.questions];
-      updatedQuestions[questionIndex].options[optionIndex] = newOptionText;
+      updatedQuestions[questionIndex].options[optionIndex].text = newOptionText;
       return { ...prevQuizData, questions: updatedQuestions };
-    });
+    });}
+    if(type=="imageUrl"){
+      setQuizData(prevQuizData => {
+        const updatedQuestions = [...prevQuizData.questions];
+        updatedQuestions[questionIndex].options[optionIndex].imageUrl = newOptionText;
+        return { ...prevQuizData, questions: updatedQuestions };
+      });}
   };  
   const handleAddOption = () => {
     console.log("Yo");
@@ -103,7 +110,7 @@ const CreateQuizModal = ({ onClose }) => {
         ...prevQuizData,
         questions: prevQuizData.questions.map((question, index) => 
           index === quizIndex 
-            ? { ...question, options: [...question.options, ''] } 
+            ? { ...question, options: [...question.options,{ text: '', imageUrl: '' }] } 
             : question
         )
       }));
@@ -123,7 +130,7 @@ const CreateQuizModal = ({ onClose }) => {
         ...quizData,
         questions: [
           ...quizData.questions,
-          { questionText: '', options: ['option1', 'option2'], correctAnswer: 0, timer: 0 },
+          { questionText: '', options: [{ text: '', imageUrl: '' }, { text: '', imageUrl: '' }], correctAnswer: 0, timer: 0,type: 'text' },
         ],
       });
     } else {
@@ -132,10 +139,16 @@ const CreateQuizModal = ({ onClose }) => {
   };
 
   const handleRemoveQuestion = (index) => {
+    console.log(quizData)
+    console.log(index)
+    setQuizIndex(index-1)
+
     const updatedQuestions = [...quizData.questions];
     updatedQuestions.splice(index, 1);
     setQuizData({ ...quizData, questions: updatedQuestions });
   };
+
+  
 
   const handleRemoveOption = (questionIndex, optionIndex) => {
     setQuizData(prevQuizData => {
@@ -157,29 +170,48 @@ const CreateQuizModal = ({ onClose }) => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    // Basic validation (you can add more as needed)
-    console.log(quizData)
+  
+    let isValid = true; // Flag to track validation status
+  
+    // Check if correctAnswer is within the bounds of options
+    quizData.questions.forEach((ques) => {
+      if (ques.options.length - 1 < ques.correctAnswer) {
+        toast.error('Check your answers - Correct answer index is out of bounds.');
+        isValid = false; // Set the flag to false if there's an error
+      }
+    });
+  
+    // Other validation checks (title, questionText, empty options)
     if (!quizData.title || quizData.questions.some(q => !q.questionText)) {
       toast.error('Please fill in all required fields.');
-      return;
+      isValid = false;
     }
-    const hasEmptyOptions = quizData.questions.some(question => 
-      question.options.some(option => option.trim() === '')
+  
+    var hasEmptyOptions = quizData.questions.some(question => 
+      question.options.some(option => option.text.trim() === '' && option.imageUrl.trim() === '')
     );
+    if (optionType === "both") {
+      hasEmptyOptions = quizData.questions.some(question => 
+        question.options.some(option => option.text.trim() === '' || option.imageUrl.trim() === '')
+      );
+    }
   
     if (hasEmptyOptions) {
       toast.error('Please fill in all option fields.');
-      return; 
+      isValid = false;
     }
-
-    try {
-      await axios.post(`${BACKEND_URL}/api/quiz/create`, quizData, {
-        headers: { Authorization: localStorage.getItem('token') },
-      });
-      toast.success('Quiz created successfully!');
-      onClose(); // Close the modal after successful creation
-    } catch (error) {
-      toast.error(error.response?.data?.error || 'Failed to create quiz');
+  
+    // Proceed with submission only if all validations pass
+    if (isValid) {
+      try {
+        await axios.post(`${BACKEND_URL}/api/quiz/create`, quizData, {
+          headers: { Authorization: localStorage.getItem('token') },
+        });
+        toast.success('Quiz created successfully!');
+        onClose(); 
+      } catch (error) {
+        toast.error(error.response?.data?.error || 'Failed to create quiz');
+      }
     }
   };
 
@@ -242,8 +274,8 @@ const CreateQuizModal = ({ onClose }) => {
 
             { /*  number section */}
             <div className='indexGrp' style={{display:'flex',justifyContent:'flex-start',alignItems:'center',margin:'10px 30px',padding:'0px 10px'}}>
-             {quizData.questions.map((question, index) =><div className='quizIndex' style={{cursor:'pointer'}} key={index} onClick={()=>setQuizIndex(index)}>
-              {index+1}
+             {quizData.questions.map((question, index) =><div className='quizIndex'  key={index} >
+              <span style={{cursor:'pointer'}} onClick={()=>setQuizIndex(index)}>{index+1}</span>
              {index>0 && <span className="close" onClick={()=>handleRemoveQuestion(index)}>&times;</span>}
              </div> )}
              <div style={{cursor:'pointer'}} onClick={handleAddQuestion}><img src={plus} alt="Add" /></div>
@@ -274,8 +306,8 @@ const CreateQuizModal = ({ onClose }) => {
                 <input 
                   type="radio" 
                   name="type" 
-                  value="Text" 
-                  checked={optionType === 'Text'}
+                  value="text" 
+                  checked={optionType === 'text'}
                   onChange={handleOptionType} 
                 />
                 <span className="radio-button">Text</span>
@@ -284,8 +316,8 @@ const CreateQuizModal = ({ onClose }) => {
                 <input 
                   type="radio" 
                   name="type" 
-                  value="Image URL" 
-                  checked={optionType === 'Image URL'}
+                  value="imageUrl" 
+                  checked={optionType === 'imageUrl'}
                   onChange={handleOptionType} 
                 />
                 <span className="radio-button" style={{whiteSpace:'nowrap'}}>Image URL</span> 
@@ -294,8 +326,8 @@ const CreateQuizModal = ({ onClose }) => {
                 <input 
                   type="radio" 
                   name="type" 
-                  value="Text & Image URL" 
-                  checked={optionType === 'Text & Image URL'}
+                  value="both" 
+                  checked={optionType === 'both'}
                   onChange={handleOptionType} 
                 />
                 <span className="radio-button" style={{whiteSpace:'nowrap'}}>Text & Image URL</span> 
@@ -308,7 +340,7 @@ const CreateQuizModal = ({ onClose }) => {
             
             <div className='typeFields'  >
                 <div className='optionGroup'>
-                {optionType=="Text"  &&(<div className='options'>
+                {optionType=="text"  &&(<div className='options'>
                   {quizData.questions[quizIndex].options.map((opt, optionIndex) => (
                     <div className='option' key={optionIndex}> 
                       <label key={optionIndex}>
@@ -322,8 +354,8 @@ const CreateQuizModal = ({ onClose }) => {
                       <span className="radio-button">
                         <input // Add an input field for editing
                           type="text"
-                          value={opt}
-                          onChange={(e) => handleOptionTextChange(quizIndex, optionIndex, e.target.value)}
+                          value={opt.text}
+                          onChange={(e) => handleOptionTextChange(quizIndex, optionIndex, e.target.value,"text")}
                         />
                       </span> 
                       {optionIndex>1 && <img style={{marginLeft:10,cursor:'pointer'}}src={bin} alt="delete" onClick={() => handleRemoveOption(quizIndex, optionIndex)} />}
@@ -336,7 +368,7 @@ const CreateQuizModal = ({ onClose }) => {
                       </button>
                     )}
                 </div>)}
-                {optionType === "Image URL" && (
+                {optionType === "imageUrl" && (
                     <div className='options'>
                       {quizData.questions[quizIndex].options.map((opt, optionIndex) => (
                         <div className='option' key={optionIndex}>
@@ -351,8 +383,53 @@ const CreateQuizModal = ({ onClose }) => {
                             <span className="radio-button">
                               <input // Input field for image URLs
                                 type="url" // Change to 'url' for URL validation
-                                value={opt}
-                                onChange={(e) => handleOptionTextChange(quizIndex, optionIndex, e.target.value)}
+                                value={opt.imageUrl}
+                                onChange={(e) => handleOptionTextChange(quizIndex, optionIndex, e.target.value,"imageUrl")}
+                                placeholder="Enter image URL"
+                              />
+                            </span>
+                            {optionIndex > 1 && (
+                              <img
+                                style={{ marginLeft: 10, cursor: 'pointer' }}
+                                src={bin}
+                                alt="delete"
+                                onClick={() => handleRemoveOption(quizIndex, optionIndex)}
+                              />
+                            )}
+                          </label>
+                        </div>
+                      ))}
+                      {currentOptionsLength < 4 && (
+                        <button onClick={handleAddOption}>
+                          Add Option
+                        </button>
+                      )}
+                    </div>
+                  )}
+                  {optionType === "both" && (
+                    <div className='options'>
+                      {quizData.questions[quizIndex].options.map((opt, optionIndex) => (
+                        <div className='option' key={optionIndex}>
+                          <label key={optionIndex}>
+                            <input
+                              type="radio"
+                              name={`question-${quizIndex}-options`}
+                              value={optionIndex}
+                              checked={quizData.questions[quizIndex].correctAnswer === optionIndex}
+                              onChange={() => handleCorrectAnswerChange(quizIndex, optionIndex)}
+                            />
+                            <span className="radio-button">
+                              <input // Add an input field for editing
+                                type="text"
+                                value={opt.text}
+                                onChange={(e) => handleOptionTextChange(quizIndex, optionIndex, e.target.value,"text")}
+                              />
+                            </span> 
+                            <span className="radio-button">
+                              <input // Input field for image URLs
+                                type="url" // Change to 'url' for URL validation
+                                value={opt.imageUrl}
+                                onChange={(e) => handleOptionTextChange(quizIndex, optionIndex, e.target.value,"imageUrl")}
                                 placeholder="Enter image URL"
                               />
                             </span>
@@ -402,7 +479,7 @@ const CreateQuizModal = ({ onClose }) => {
 
 
             {/* Text+URL */}
-            {optionType=="Text & Image URL"  &&<div className='typeFields' >Text & Image URL</div>}
+            {/* {optionType=="Text & Image URL"  &&<div className='typeFields' >Text & Image URL</div>} */}
 
              <div className='buttons'><button onClick={handleClose} className='cancel'>Cancel</button>
           <button className='createQuiz' type="submit">Create Quiz</button></div>
