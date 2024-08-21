@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 import Login from './components/Auth/Login';
 import Register from './components/Auth/Register';
@@ -15,7 +15,7 @@ import './App.css'
 
 
 function App() {
-
+  useEffect(()=>console.log("bro"),[])
   const ProtectedRoute = ({ children }) => {
     const { isLoggedIn } = useAuth(); // Add this line to access the context
   

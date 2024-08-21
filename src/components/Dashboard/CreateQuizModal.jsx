@@ -43,7 +43,7 @@ const CreateQuizModal = ({ onClose }) => {
     title: '',
     type: 'qna', 
     questions: [
-      { questionText: '', options: [{ text: '', imageUrl: '' }, { text: '', imageUrl: '' }], correctAnswer: 0, timer: 0,type:'text' },
+      { questionText: '', options: [{ text: '', imageUrl: '' }, { text: '', imageUrl: '' }], correctAnswer: 0, timer: null,type:'text' },
     ],
   });
   const currentOptionsLength = quizData.questions[quizIndex].options.length;
@@ -64,7 +64,7 @@ const CreateQuizModal = ({ onClose }) => {
       title: '',
       type: 'qna', 
       questions: [
-        { questionText: '', options: [{ text: '', imageUrl: '' }, { text: '', imageUrl: '' }], correctAnswer: 0, timer: 0,type:"text" },
+        { questionText: '', options: [{ text: '', imageUrl: '' }, { text: '', imageUrl: '' }], correctAnswer: 0, timer: null,type:"text" },
       ],
     })
     onClose();
@@ -72,7 +72,7 @@ const CreateQuizModal = ({ onClose }) => {
 
   }
   const handleOptionType=(e,questionIndex)=>{
-    console.log(e)
+    console.log(e.target.value)
     setOptionType(e.target.value)
     setQuizData(prevQuizData => {
       const updatedQuestions = [...prevQuizData.questions];
@@ -138,7 +138,7 @@ const CreateQuizModal = ({ onClose }) => {
         ...quizData,
         questions: [
           ...quizData.questions,
-          { questionText: '', options: [{ text: '', imageUrl: '' }, { text: '', imageUrl: '' }], correctAnswer: 0, timer: 0,type: 'text' },
+          { questionText: '', options: [{ text: '', imageUrl: '' }, { text: '', imageUrl: '' }], correctAnswer: 0, timer: null,type: 'text' },
         ],
       });
     } else {
@@ -201,6 +201,16 @@ const CreateQuizModal = ({ onClose }) => {
     if (optionType === "both") {
       hasEmptyOptions = quizData.questions.some(question => 
         question.options.some(option => option.text.trim() === '' || option.imageUrl.trim() === '')
+      );
+    }
+    if (optionType === "text") {
+      hasEmptyOptions = quizData.questions.some(question => 
+        question.options.some(option => option.text.trim() === '')
+      );
+    }
+    if (optionType === "imageUrl") {
+      hasEmptyOptions = quizData.questions.some(question => 
+        question.options.some(option =>option.imageUrl.trim() === '')
       );
     }
     if (hasEmptyOptions) {
@@ -282,7 +292,12 @@ const CreateQuizModal = ({ onClose }) => {
             { /*  number section */}
             <div className='indexGrp' style={{display:'flex',justifyContent:'flex-start',alignItems:'center',margin:'10px 30px',padding:'0px 10px'}}>
              {quizData.questions.map((question, index) =><div className='quizIndex'  key={index} >
-              <span style={{cursor:'pointer'}} onClick={()=>setQuizIndex(index)}>{index+1}</span>
+              <span style={{cursor:'pointer'}} 
+              onClick={()=>{
+                setQuizIndex(index)
+                setOptionType(quizData.questions[index].type)
+                }}>
+                {index+1}</span>
              {index>0 && <img src={cross} className="close"  alt="remove" onClick={()=>handleRemoveQuestion(index)}  />}
              </div> )}
              <div style={{cursor:'pointer',}} className='plus' onClick={handleAddQuestion}><img src={plus} alt="Add" /></div>
@@ -461,8 +476,8 @@ const CreateQuizModal = ({ onClose }) => {
                   )}
                   <div className='timers'>
                     <span>Timer</span>
-                    <button style={{height:5}} className={quizData.questions[quizIndex].timer==0?'timer-active':''}
-                    onClick={(e) => handleTimerChange(e,quizIndex, 0)}
+                    <button style={{height:5}} className={quizData.questions[quizIndex].timer==null?'timer-active':''}
+                    onClick={(e) => handleTimerChange(e,quizIndex, null)}
                     >OFF</button>
                     <button className={quizData.questions[quizIndex].timer==5?'timer-active':''}
                     onClick={(e) => handleTimerChange(e,quizIndex, 5)}
