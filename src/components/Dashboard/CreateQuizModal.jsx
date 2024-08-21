@@ -71,8 +71,14 @@ const CreateQuizModal = ({ onClose }) => {
 
 
   }
-  const handleOptionType=(e)=>{
+  const handleOptionType=(e,questionIndex)=>{
+    console.log(e)
     setOptionType(e.target.value)
+    setQuizData(prevQuizData => {
+      const updatedQuestions = [...prevQuizData.questions];
+      updatedQuestions[questionIndex].type = e.target.value; 
+      return { ...prevQuizData, questions: updatedQuestions };
+    });
   }
 
   const handleTimerChange = (e,questionIndex, newTimerValue) => {
@@ -102,6 +108,7 @@ const CreateQuizModal = ({ onClose }) => {
         updatedQuestions[questionIndex].options[optionIndex].imageUrl = newOptionText;
         return { ...prevQuizData, questions: updatedQuestions };
       });}
+      console.log(quizData)
   };  
   const handleAddOption = () => {
     console.log("Yo");
@@ -196,18 +203,17 @@ const CreateQuizModal = ({ onClose }) => {
         question.options.some(option => option.text.trim() === '' || option.imageUrl.trim() === '')
       );
     }
-  
     if (hasEmptyOptions) {
       toast.error('Please fill in all option fields.');
       isValid = false;
     }
-  
-    // Proceed with submission only if all validations pass
+   
     if (isValid) {
       try {
         await axios.post(`${BACKEND_URL}/api/quiz/create`, quizData, {
           headers: { Authorization: localStorage.getItem('token') },
         });
+        console.log(quizData)
         toast.success('Quiz created successfully!');
         onClose(); 
       } catch (error) {
@@ -309,7 +315,7 @@ const CreateQuizModal = ({ onClose }) => {
                   name="type" 
                   value="text" 
                   checked={optionType === 'text'}
-                  onChange={handleOptionType} 
+                  onChange={(e)=>handleOptionType(e,quizIndex)} 
                 />
                 <span className="radio-button">Text</span>
               </label>
@@ -319,7 +325,7 @@ const CreateQuizModal = ({ onClose }) => {
                   name="type" 
                   value="imageUrl" 
                   checked={optionType === 'imageUrl'}
-                  onChange={handleOptionType} 
+                  onChange={(e)=>handleOptionType(e,quizIndex)} 
                 />
                 <span className="radio-button" style={{whiteSpace:'nowrap'}}>Image URL</span> 
               </label>
@@ -329,7 +335,7 @@ const CreateQuizModal = ({ onClose }) => {
                   name="type" 
                   value="both" 
                   checked={optionType === 'both'}
-                  onChange={handleOptionType} 
+                  onChange={(e)=>handleOptionType(e,quizIndex)} 
                 />
                 <span className="radio-button" style={{whiteSpace:'nowrap'}}>Text & Image URL</span> 
               </label>
@@ -407,7 +413,7 @@ const CreateQuizModal = ({ onClose }) => {
                       )}
                     </div>
                   )}
-                  //TODO fix both selected input as green color
+                  {/* TODO fix both selected input as green color */}
                   {optionType === "both" && (
                     <div className='options'>
                       {quizData.questions[quizIndex].options.map((opt, optionIndex) => (
