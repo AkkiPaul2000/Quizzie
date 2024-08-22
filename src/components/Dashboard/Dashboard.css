@@ -51,20 +51,46 @@
     color: #FFFFFF;
 }
 
-.typeButton1 label {
+
+/* /////////////////////////////////////////////// */
+
+@media (max-width: 600px) {
+    .typeButton1 {
+        flex-direction: 'column';
+        align-items: 'flex-start';
+    }
+}
+
+
+/* Media query for smaller screens */
+
+
+/* ////////////////////////////// */
+
+
+/* .typeButton1 label:nth-of-type(2) {
     display: flex;
     flex: 2;
-    /* background-color: red; */
+    flex-direction: row;
+}
+
+.typeButton1 label div {
+    display: flex;
+    flex-direction: row;
+    flex: 1;
     justify-content: center;
     align-items: center;
-    font-weight: 500;
-    /* color: #9F9F9F; */
 }
 
 .typeButton1 label:first-child {
+    display: flex;
     flex: 1;
-    color: #9F9F9F;
-}
+} */
+
+
+/* .typeButton1 div label:nth-of-type(2) {
+    background-color: red;
+} */
 
 .quizName {
     border-radius: 10px;

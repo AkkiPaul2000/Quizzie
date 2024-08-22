@@ -321,41 +321,50 @@ const CreateQuizModal = ({ onClose }) => {
              <div className='quizDetails'>
               
               {/* Option Type */}
-              <div className='typeButton1' style={{margin:'10px 50px'}} >
-              <label htmlFor="type" >Option Type</label>
-              <label>
-              <label>
-                <input 
-                  type="radio" 
-                  name="type" 
-                  value="text" 
-                  checked={optionType === 'text'}
-                  onChange={(e)=>handleOptionType(e,quizIndex)} 
-                />
-                <span className="radio-button">Text</span>
-              </label>
-              <label>
-                <input 
-                  type="radio" 
-                  name="type" 
-                  value="imageUrl" 
-                  checked={optionType === 'imageUrl'}
-                  onChange={(e)=>handleOptionType(e,quizIndex)} 
-                />
-                <span className="radio-button" style={{whiteSpace:'nowrap'}}>Image URL</span> 
-              </label>
-              <label>
-                <input 
-                  type="radio" 
-                  name="type" 
-                  value="both" 
-                  checked={optionType === 'both'}
-                  onChange={(e)=>handleOptionType(e,quizIndex)} 
-                />
-                <span className="radio-button" style={{whiteSpace:'nowrap'}}>Text & Image URL</span> 
-              </label>
-              </label>
+
+              <div className='typeButton1' style={{
+                margin: '10px 50px',
+                display: 'flex',
+                flexWrap: 'wrap',
+                alignItems: 'center',
+                gap: '10px'
+            }}>
+                <label htmlFor="type">Option Type</label>
+
+                <label style={{ display: 'flex', alignItems: 'center' }}>
+                    <input 
+                        type="radio" 
+                        name="type" 
+                        value="text" 
+                        checked={optionType === 'text'}
+                        onChange={(e) => handleOptionType(e, quizIndex)} 
+                    />
+                    <div className="radio-button" style={{ marginLeft: '5px' }}>Text</div>
+                </label>
+
+                <label style={{ display: 'flex', alignItems: 'center' }}>
+                    <input 
+                        type="radio" 
+                        name="type" 
+                        value="imageUrl" 
+                        checked={optionType === 'imageUrl'}
+                        onChange={(e) => handleOptionType(e, quizIndex)} 
+                    />
+                    <div className="radio-button" style={{ marginLeft: '5px', whiteSpace: 'nowrap' }}>Image URL</div>
+                </label>
+
+                <label style={{ display: 'flex', alignItems: 'center' }}>
+                    <input 
+                        type="radio" 
+                        name="type" 
+                        value="both" 
+                        checked={optionType === 'both'}
+                        onChange={(e) => handleOptionType(e, quizIndex)} 
+                    />
+                    <div className="radio-button" style={{ marginLeft: '5px', whiteSpace: 'nowrap' }}>Text & Image URL</div>
+                </label>
             </div>
+
              </div>
             {/* Conditional input rendering */}
             {/* Text */}
