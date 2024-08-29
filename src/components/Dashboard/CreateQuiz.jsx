@@ -247,7 +247,6 @@ const CreateQuiz = ({ onClose }) => {
         });
 
         console.log(quizData);
-        toast.success('Quiz created successfully!');
 
         // Update the quiz list in the QuizContext
         setQuizzes([...quizzes, response.data]);

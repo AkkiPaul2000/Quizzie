@@ -286,7 +286,7 @@ const EditQuiz = ({ quiz, onClose, onSave }) => {
               {/* detail section */}
               <div className='quizDetails'>
                 {/* Option Type */}
-                <div className='typeButton1'>
+                <div className='typeButton1' >
                   <label htmlFor="type" style={{ whiteSpace: 'nowrap' }}>Option Type</label>
 
                   {/* Disable option type radio buttons */}
@@ -296,10 +296,11 @@ const EditQuiz = ({ quiz, onClose, onSave }) => {
                       name="type"
                       value="text"
                       checked={optionType === 'text'}
+                      style={{cursor:'not-allowed'}}
                       onChange={(e) => toast.warning("You can't change the option type while editing.")}
                       disabled
                     />
-                    <div className="radio-button" style={{ marginLeft: '5px' }}>Text</div>
+                    <div className="radio-button" style={{ marginLeft: '5px',cursor:'not-allowed' }}>Text</div>
                   </label>
 
                   {/* Image URL */}
@@ -308,11 +309,12 @@ const EditQuiz = ({ quiz, onClose, onSave }) => {
                       type="radio"
                       name="type"
                       value="imageUrl"
+                      style={{cursor:'not-allowed'}}
                       checked={optionType === 'imageUrl'}
                       onChange={(e) => toast.warning("You can't change the option type while editing.")}
                       disabled
                     />
-                    <div className="radio-button" style={{ marginLeft: '5px', whiteSpace: 'nowrap' }}>Image URL</div>
+                    <div className="radio-button" style={{ marginLeft: '5px', whiteSpace: 'nowrap',cursor:'not-allowed' }}>Image URL</div>
                   </label>
 
                   {/* Text & Image URL */}
@@ -321,11 +323,12 @@ const EditQuiz = ({ quiz, onClose, onSave }) => {
                       type="radio"
                       name="type"
                       value="both"
+                      style={{cursor:'not-allowed'}}
                       checked={optionType === 'both'}
                       onChange={(e) => toast.warning("You can't change the option type while editing.")}
                       disabled
                     />
-                    <div className="radio-button" style={{ marginLeft: '5px', whiteSpace: 'nowrap' }}>Text & Image URL</div>
+                    <div className="radio-button" style={{ marginLeft: '5px', whiteSpace: 'nowrap',cursor:'not-allowed' }}>Text & Image URL</div>
                   </label>
                 </div> {/* End of .typeButton1 */}
               </div> {/* End of .quizDetails */}
