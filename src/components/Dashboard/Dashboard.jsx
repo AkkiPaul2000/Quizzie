@@ -6,9 +6,9 @@ import { Link } from "react-router-dom";
 import { BACKEND_URL } from "../../utils/constant";
 import eye from "../../assets/eye.svg";
 import "./Dashboard.css";
-import { useQuizzes } from "../../utils/QuizContext"; // Import the QuizContext hook
 import { formatDate } from "../../utils/dateUtils";
 import Loader from "../common/Loader";
+import { useQuizzes } from "../../utils/quizContext";
 
 const Dashboard = () => {
   const { user, logout, navigate } = useAuth();

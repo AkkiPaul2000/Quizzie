@@ -8,7 +8,7 @@ import bin from '../../assets/bin.svg';
 import cross from '../../assets/cross.svg';
 import CopyLink from './CopyLink';
 import { useAuth } from '../../utils/auth'; // Import useAuth
-import { useQuizzes } from '../../utils/QuizContext'; // Import useQuizzes
+import { useQuizzes } from '../../utils/quizContext';
 
 const CreateQuiz = ({ onClose }) => {
   // ... (other state variables: quizType, quizIndex, optionType, completed, linkId)
