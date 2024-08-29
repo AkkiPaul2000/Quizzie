@@ -10,12 +10,15 @@ import edit from '../../assets/edit.svg'
 import DelConfirm from './modals/DelConfirm';
 import { Link } from 'react-router-dom';
 import EditQuiz from './EditQuiz';
+import { useQuizzes } from '../../utils/quizContext';
+import { formatDate } from '../../utils/dateUtils';
+import Loader from '../common/Loader';
 
 
 function QuizAnalytics() {
-  const { user,loading } = useAuth();
-  const [quizzes, setQuizzes] = useState([]);
-  const [selectedQuiz, setSelectedQuiz] = useState(null); // To store the quiz being edited
+  const { user, isLoading } = useAuth();
+  const { quizzes,setQuizzes } = useQuizzes(); // Get quizzes from QuizContext
+  const [selectedQuiz, setSelectedQuiz] = useState(null);
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
   const [delModel, setDelModel] = useState(false);
   const handleShareClick = (id) => {
@@ -33,24 +36,7 @@ function QuizAnalytics() {
 
   };
 
-  useEffect(() => {
-    const fetchQuizzes = async () => {
-      try {
-        const response = await axios.get(`${BACKEND_URL}/api/quiz/my-quizzes`, {
-          headers: { Authorization: localStorage.getItem('token') },
-        });
-        setQuizzes(response.data);
-        console.log(response.data);
-      } catch (error) {
-        console.log(error);
-        toast.error(error.response?.data?.error || 'Failed to fetch quizzes');
-      }
-    };
 
-    if (user) {
-      fetchQuizzes();
-    }
-  }, [user]);
 
   const handleEditClick = (quiz) => {
     setSelectedQuiz(quiz); // Pass the entire quiz object
@@ -89,20 +75,13 @@ function QuizAnalytics() {
     setDelModel(false)
   };
 
-  const convertDate=(number)=>{
-    const createdAtDate = new Date(number);
-  const formattedDate = createdAtDate.toLocaleDateString('en-GB', {
-    day: 'numeric',
-    month: 'short', // Use 'short' for abbreviated month name
-    year: 'numeric'
-  });
-  return formattedDate;
-  }
-  if (loading) {
-    return <div>Loading...</div>;
+ 
+  if (isLoading) {
+    return <Loader/>;
   }
   return (
     <div className="quizAnalytics">
+      {console.log("Its loading ",isLoading)}L
       <h1>Quiz Analytics</h1>
       <div className="table-container">
         <table>
@@ -121,7 +100,7 @@ function QuizAnalytics() {
               <tr key={quiz._id}>
                 <td>{index + 1}</td>
                 <td>{quiz.title}</td>
-                <td>{convertDate(quiz.createdAt)}</td> {/* Replace with dynamic date if available */}
+                <td>{formatDate(quiz.createdAt)}</td> {/* Replace with dynamic date if available */}
                 <td>{quiz.impressions}</td>
                 <td style={{whiteSpace:'nowrap'}}>
                 <button 

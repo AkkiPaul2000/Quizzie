@@ -5,12 +5,17 @@ import { useAuth } from '../../utils/auth';
 import axios from 'axios';
 import { toast } from 'react-toastify';
 import { BACKEND_URL } from '../../utils/constant';
+import { formatDate } from '../../utils/dateUtils';
+import Loader from '../common/Loader';
 
 const QuestionAnalysis = () => {
   const { id } = useParams();
   const { user } = useAuth();
   const [quiz, setQuizzes] = useState([])
+  const [loading, setLoading] = useState(true); // Add loading state
+
   useEffect(() => {
+    setLoading(true)
     const fetchQuizzes = async () => {
       try {
         const response = await axios.get(`${BACKEND_URL}/api/quiz/analytics/${id}`, {
@@ -32,25 +37,25 @@ const QuestionAnalysis = () => {
 
     if (user) {
       fetchQuizzes();
+      setLoading(false)
     }
   }, [user, id]); // Include 'id' in the dependency array
+
+
+  if(loading){
+    return <Loader/>
+  }
 
   if (!quiz) {
     return <div>No quiz data available</div>;
   }
-  const createdAtDate = new Date(quiz.createdAt);
-        const formattedDate = createdAtDate.toLocaleDateString('en-GB', {
-          day: 'numeric',
-          month: 'short', // Use 'short' for abbreviated month name
-          year: 'numeric'
-        });
-
+ 
         
   return (
     <div className="question-analysis">
       <div className="headerDiv">
         <h1>{quiz.title}- Question Analysis</h1>
-        <div className='QuickData'><span>Created on: {formattedDate}</span><span>Impressions: {quiz.impressions}</span></div>
+        <div className='QuickData'><span>Created on: {formatDate(quiz.createdAt)}</span><span>Impressions: {quiz.impressions}</span></div>
       </div>
       {quiz.type=="qna" && <div class="questions">
         {quiz.questions.map(question=>

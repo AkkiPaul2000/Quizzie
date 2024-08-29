@@ -8,6 +8,7 @@ import eye from "../../assets/eye.svg";
 import "./Dashboard.css";
 import { useQuizzes } from "../../utils/QuizContext"; // Import the QuizContext hook
 import { formatDate } from "../../utils/dateUtils";
+import Loader from "../common/Loader";
 
 const Dashboard = () => {
   const { user, logout, navigate } = useAuth();
@@ -18,7 +19,7 @@ const Dashboard = () => {
     impression: 0,
   });
   const [myTrendingQuizzes, setMyTrendingQuizzes] = useState([]);
-  const [isLoading, setIsLoading] = useState(true); // Add loading state
+  const [loading, setLoading] = useState(true); // Add loading state
 
   // useEffect to fetch quizzes has been removed as it's handled by QuizProvider
 
@@ -33,6 +34,8 @@ const Dashboard = () => {
   }, [quizzes]); // Dependency on 'quizzes' from QuizContext
 
   useEffect(() => {
+    setLoading(true)
+
     const fetchMyTrendingQuizzes = async () => {
       try {
         const userIdToFetch = user.userId; 
@@ -51,15 +54,15 @@ const Dashboard = () => {
 
     if (user) { 
       fetchMyTrendingQuizzes();
-      setIsLoading(false)
+      setLoading(false)
     }
   }, [user]);
 
   // ... (Add functions to handle quiz creation, sharing, etc. later)
 
   // Conditionally render loading indicator or content
-  if (isLoading) {
-    return <div>Loading...</div>;
+  if (loading) {
+    return <Loader/>;
   }
   return (
     <div className='dashboardPage'>

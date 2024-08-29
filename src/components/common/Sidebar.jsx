@@ -52,7 +52,7 @@ const Sidebar = () => {
           navigate('/analytics')
         }}>Analytics</div>
         <div className={`navButton ${selIndex == 2 ? 'activeLink' : ''}`} onClick={handleCreateQuizClick}>Create Quiz</div>
-        {console.log(isModalOpen)}
+        {console.log("is modal open? ",isModalOpen)}
       </div>
       <div className='logOut' onClick={handleLogout}>LOGOUT</div>
     </aside>

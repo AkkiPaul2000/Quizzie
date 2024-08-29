@@ -18,50 +18,54 @@ export const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null);
   const navigate = useNavigate();
   const location = useLocation(); 
-
   useEffect(() => {
     const checkTokenValidity = async () => {
       const token = localStorage.getItem('token');
       console.log('token')
       if (token) {
         try {
-          // Verify token on the backend 
+          setIsLoading(true); // Set isLoading to true before fetching quiz data
+
+          // Verify token on the backend
           const response = await axios.get(`${BACKEND_URL}/api/auth/verify`, {
             headers: { Authorization: token },
           });
-          
+
           // Decode the token and set user data
           const decodedUser = jwtDecode(token);
           setUser(decodedUser);
 
+          setIsLoading(false); // Set isLoading to false after fetching quiz data
+
         } catch (error) {
           if (error.response && error.response.status === 401) {
             // Token is invalid or expired
-            logout(); 
-            navigate('/login'); 
-            toast.error('Your session has expired. Please log in again.'); 
+            logout();
+            navigate('/login');
+            toast.error('Your session has expired. Please log in again.');
           } else {
             // Handle other errors
             logout()
             console.error('Error verifying token:', error);
             toast.error('An error occurred. Please login again');
           }
+          setIsLoading(false); // Set isLoading to false even if there's an error
         }
       } else {
         // No token found, user is not logged in
-        logout(); 
-        navigate('/login'); 
+        logout();
+        navigate('/login');
+        setIsLoading(false); 
       }
     };
 
     // Check token validity only if not on the /quiz/:id route
-    if (!location.pathname.startsWith('/quiz/') && location.pathname !== '/login' && location.pathname !== '/register') { 
-      checkTokenValidity(); 
+    if (!location.pathname.startsWith('/quiz/') && location.pathname !== '/login' && location.pathname !== '/register') {
+      checkTokenValidity();
+    } else {
+      setIsLoading(false); 
     }
-    setIsLoading(false); // Set loading to false after verification (or error)
-
-  }, [location]); 
-
+  }, [location]);
   const login = (token) => {
     localStorage.setItem('token', token);
     setIsLoggedIn(true);
@@ -76,7 +80,7 @@ export const AuthProvider = ({ children }) => {
   };
 
   return (
-    <AuthContext.Provider value={{ isLoggedIn, user, login, logout }}>
+    <AuthContext.Provider value={{ isLoggedIn, user, login, logout,isLoading }}>
       {children}
     </AuthContext.Provider>
   );

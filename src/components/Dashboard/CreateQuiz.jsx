@@ -30,7 +30,7 @@ const CreateQuiz = ({ onClose }) => {
 
 
 
-   const [quizType,setQuizType]=useState(false)
+  const [quizType,setQuizType]=useState(false) 
   const [quizIndex,setQuizIndex]=useState(0)
   const [optionType,setOptionType]=useState("text")
   const [completed,setCompleted]=useState(false)
@@ -260,6 +260,10 @@ const CreateQuiz = ({ onClose }) => {
         toast.error(error.response?.data?.error || 'Failed to create quiz');
       }
     }
+    ///
+
+
+///
   };
 
   return (
