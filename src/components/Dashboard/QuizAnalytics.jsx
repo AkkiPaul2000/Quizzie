@@ -81,7 +81,7 @@ function QuizAnalytics() {
   }
   return (
     <div className="quizAnalytics">
-      {console.log("Its loading ",isLoading)}L
+      {console.log("Its loading ",isLoading)}
       <h1>Quiz Analytics</h1>
       <div className="table-container">
         <table>

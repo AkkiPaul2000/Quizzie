@@ -32,13 +32,15 @@ const ProtectedRoute = ({ children, path }) => {
   }
   return (
     <div className="protected-route-container">
+      <QuizProvider> 
       <Sidebar className="sidebar" />{" "}
       {/* Sidebar will only render for protected routes */}
       <div className="main-content">
-        <QuizProvider> {/* Wrap protected routes with QuizProvider */}
+        {/* Wrap protected routes with QuizProvider */}
           {children}
-        </QuizProvider>
       </div>
+      </QuizProvider>
+
     </div>
   );
 };

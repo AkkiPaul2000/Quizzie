@@ -8,6 +8,8 @@ import plus from '../../assets/plus.svg'; // Assuming your SVG is in the 'assets
 import bin from '../../assets/bin.svg'; 
 import cross from '../../assets/cross.svg'; 
 import CopyLink from './CopyLink';
+import { useAuth } from '../../utils/auth';
+import { useQuizzes } from '../../utils/quizContext';
 
 const CreateQuiz = ({ onClose }) => {
 
@@ -29,7 +31,8 @@ const CreateQuiz = ({ onClose }) => {
   // }, [onClose]);
 
 
-
+  const { user } = useAuth(); // Get user from AuthContext
+  const { quizzes, setQuizzes } = useQuizzes(); 
   const [quizType,setQuizType]=useState(false) 
   const [quizIndex,setQuizIndex]=useState(0)
   const [optionType,setOptionType]=useState("text")
@@ -128,11 +131,7 @@ const CreateQuiz = ({ onClose }) => {
       toast.warning('You can only have a maximum of 4 options per question.');
     }
   };
-  const handleQuestionChange = (index, field, value) => {
-    const updatedQuestions = [...quizData.questions];
-    updatedQuestions[index][field] = value;
-    setQuizData({ ...quizData, questions: updatedQuestions });
-  };
+
 
   const handleAddQuestion = () => {
     
@@ -244,23 +243,23 @@ const CreateQuiz = ({ onClose }) => {
     if (isValid) {
       try {
         const response = await axios.post(`${BACKEND_URL}/api/quiz/create`, quizData, {
-        headers: { Authorization: localStorage.getItem('token') },
-      });
+          headers: { Authorization: localStorage.getItem('token') },
+        });
 
-      console.log(quizData);
-      toast.success('Quiz created successfully!');
-      
-      // Access the _id from the response
-      const newQuizId = response.data._id; 
-      setLinkId(newQuizId); 
-      setCompleted(!completed)
+        console.log(quizData);
         toast.success('Quiz created successfully!');
-        
+
+        // Update the quiz list in the QuizContext
+        setQuizzes([...quizzes, response.data]);
+
+        const newQuizId = response.data._id; 
+        setLinkId(newQuizId);
+        setCompleted(!completed);
+        toast.success('Quiz created successfully!');
       } catch (error) {
         toast.error(error.response?.data?.error || 'Failed to create quiz');
       }
     }
-    ///
 
 
 ///

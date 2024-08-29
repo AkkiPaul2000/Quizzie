@@ -11,6 +11,7 @@ const QuizContext = createContext();
 export const QuizProvider = ({ children }) => {
   const [quizzes, setQuizzes] = useState([]);
   const { user, logout, navigate} = useAuth(); // Get user and auth functions from useAuth
+  const [activeSidebarItem, setActiveSidebarItem] = useState('Dashboard'); // Default to 'Dashboard'
 
   useEffect(() => {
     const fetchQuizzes = async () => {
@@ -38,7 +39,7 @@ export const QuizProvider = ({ children }) => {
   }, [user]);
 
   return (
-    <QuizContext.Provider value={{ quizzes, setQuizzes }}>
+    <QuizContext.Provider value={{ quizzes, setQuizzes, activeSidebarItem,setActiveSidebarItem}}>
       {children}
     </QuizContext.Provider>
   );

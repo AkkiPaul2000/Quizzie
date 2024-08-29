@@ -5,8 +5,11 @@ import './Common.css'
 import { useAuth } from '../../utils/auth';
 import { toast } from 'react-toastify';
 import CreateQuiz from '../Dashboard/CreateQuiz';
+import { useQuizzes } from '../../utils/quizContext';
 const Sidebar = () => {
-  const { isLoggedIn, logout,user } = useAuth();
+  const { isLoggedIn, logout, user } = useAuth();
+  const { activeSidebarItem, setActiveSidebarItem } = useQuizzes(); // Access from QuizContext
+
   const [selIndex,setSelIndex]=useState(0)
 
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -19,7 +22,6 @@ const Sidebar = () => {
 
   const handleCloseModal = () => {
     setIsModalOpen(false);
-    window.location.reload();
   };
   const handleLogout = async (e) => {
     logout()
@@ -30,35 +32,53 @@ const Sidebar = () => {
     const currentUrl = window.location.href;
 
     if (currentUrl.includes('dashboard')) {
-      setSelIndex(0);
+      setActiveSidebarItem('Dashboard'); 
     } else if (currentUrl.includes('analytics')) { 
-      setSelIndex(1);
+      setActiveSidebarItem('Analytics');
     } 
     else if (currentUrl.includes('analysis')) { 
-      setSelIndex(1);
+      setActiveSidebarItem('Analytics');
     } 
-    // You can add more conditions here for other routes if needed
-  }, []); // Empty dependency array ensures this runs only once on mount
+  }, []); 
   return (
     <>
-    <aside style={{ width: '200px', backgroundColor: '#FFFFFF', color: '#474444', padding: '0px 20px' }}>
-      <h2 className='brandName'>QUIZZIE</h2>
-      
-      <div className='navButtons'>
-        <div className={`navButton ${selIndex == 0 ? 'activeLink' : ''}`} onClick={()=>{setSelIndex(0)
-          navigate('/dashboard')
-        }}>Dashboard</div>
-        <div className={`navButton ${selIndex == 1 ? 'activeLink' : ''}`} onClick={()=>{setSelIndex(1)
-          navigate('/analytics')
-        }}>Analytics</div>
-        <div className={`navButton ${selIndex == 2 ? 'activeLink' : ''}`} onClick={handleCreateQuizClick}>Create Quiz</div>
-        {console.log("is modal open? ",isModalOpen)}
-      </div>
-      <div className='logOut' onClick={handleLogout}>LOGOUT</div>
-    </aside>
-    {isModalOpen && <CreateQuiz onClose={handleCloseModal} />}
+    {isLoggedIn && (
+      <aside style={{ width: '200px', backgroundColor: '#FFFFFF', color: '#474444', padding: '0px 20px' }}>
+        {/* ... */}
+        <div className='navButtons'>
+          <div
+            className={`navButton ${activeSidebarItem === 'Dashboard' ? 'activeLink' : ''}`}
+            onClick={() => {
+              setActiveSidebarItem('Dashboard');
+              navigate('/dashboard');
+            }}
+          >
+            Dashboard
+          </div>
+          <div
+            className={`navButton ${activeSidebarItem === 'Analytics' ? 'activeLink' : ''}`}
+            onClick={() => {
+              setActiveSidebarItem('Analytics');
+              navigate('/analytics');
+            }}
+          >
+            Analytics
+          </div>
+          <div
+            className={`navButton ${activeSidebarItem === 'Create Quiz' ? 'activeLink' : ''}`}
+            onClick={() => {
+              handleCreateQuizClick();
+            }}
+          >
+            Create Quiz
+          </div>
+        </div>
+        {/* ... */}
+      </aside>
+    )}
 
-    </>
+    {isModalOpen && <CreateQuiz onClose={handleCloseModal} />}
+  </>
   );
 };
 

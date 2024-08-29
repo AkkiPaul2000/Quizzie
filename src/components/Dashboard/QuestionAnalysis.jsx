@@ -53,6 +53,7 @@ const QuestionAnalysis = () => {
         
   return (
     <div className="question-analysis">
+      {console.log(loading)}
       <div className="headerDiv">
         <h1>{quiz.title}- Question Analysis</h1>
         <div className='QuickData'><span>Created on: {formatDate(quiz.createdAt)}</span><span>Impressions: {quiz.impressions}</span></div>
