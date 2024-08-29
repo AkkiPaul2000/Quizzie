@@ -1,67 +1,66 @@
-import React, { useEffect, useState } from 'react';
-import { useAuth } from '../../utils/auth';
-import axios from 'axios';
-import { toast } from 'react-toastify';
-import { Link } from 'react-router-dom';
-import { BACKEND_URL } from '../../utils/constant';
-import eye from '../../assets/eye.svg'
-import './Dashboard.css'
+import React, { useEffect, useState } from "react";
+import { useAuth } from "../../utils/auth";
+import axios from "axios";
+import { toast } from "react-toastify";
+import { Link } from "react-router-dom";
+import { BACKEND_URL } from "../../utils/constant";
+import eye from "../../assets/eye.svg";
+import "./Dashboard.css";
+import { useQuizzes } from "../../utils/QuizContext"; // Import the QuizContext hook
+import { formatDate } from "../../utils/dateUtils";
 
 const Dashboard = () => {
-  const { user } = useAuth();
+  const { user, logout, navigate } = useAuth();
+  const { quizzes } = useQuizzes(); // Get quizzes from QuizContext
   const [statState, setStatState] = useState({
     quizCreated: 0,
     questionCreated: 0,
     impression: 0,
   });
-  const [myTrendingQuizzes, setMyTrendingQuizzes] = useState([])
+  const [myTrendingQuizzes, setMyTrendingQuizzes] = useState([]);
+  const [isLoading, setIsLoading] = useState(true); // Add loading state
+
+  // useEffect to fetch quizzes has been removed as it's handled by QuizProvider
 
   useEffect(() => {
-    const fetchQuizzesAndCalculateStats = async () => {
-      try {
-        const response = await axios.get(`${BACKEND_URL}/api/quiz/my-quizzes`, {
-          headers: { Authorization: localStorage.getItem('token') },
-        });
-
-        // Calculate statistics directly after fetching quizzes
-        const newStats = {
-          quizCreated: response.data.length,
-          questionCreated: response.data.reduce((total, quiz) => total + quiz.questions.length, 0),
-          impression: response.data.reduce((total, quiz) => total + quiz.impressions, 0),
-        };
-        setStatState(newStats);
-      } catch (error) {
-        toast.error(error.response?.data?.error || 'Failed to fetch quizzes');
-      }
+    // Calculate statistics whenever quizzes change (from QuizContext)
+    const newStats = {
+      quizCreated: quizzes.length,
+      questionCreated: quizzes.reduce((total, quiz) => total + quiz.questions.length, 0),
+      impression: quizzes.reduce((total, quiz) => total + quiz.impressions, 0),
     };
+    setStatState(newStats);
+  }, [quizzes]); // Dependency on 'quizzes' from QuizContext
 
-    if (user) {
-      fetchQuizzesAndCalculateStats();
-    }
-  }, [user]); // Dependency on 'user' remains
   useEffect(() => {
     const fetchMyTrendingQuizzes = async () => {
       try {
-        // Assuming you have the userId you want to fetch trending quizzes for
-        const userIdToFetch = user.userId; // Or any other userId you want
-  
-        const response = await axios.get(`${BACKEND_URL}/api/quiz/my-trending/${userIdToFetch}`, {
-          headers: { Authorization: localStorage.getItem('token') }, 
-        });
-        setMyTrendingQuizzes(response.data);
-        console.log(response.data)
+        const userIdToFetch = user.userId; 
 
+        const response = await axios.get(
+          `${BACKEND_URL}/api/quiz/my-trending/${userIdToFetch}`,
+          {
+            headers: { Authorization: localStorage.getItem("token") },
+          }
+        );
+        setMyTrendingQuizzes(response.data);
       } catch (error) {
-        console.log("server Crashed")
+        console.log("server Crashed");
       }
     };
-  
+
     if (user) { 
       fetchMyTrendingQuizzes();
+      setIsLoading(false)
     }
   }, [user]);
+
   // ... (Add functions to handle quiz creation, sharing, etc. later)
 
+  // Conditionally render loading indicator or content
+  if (isLoading) {
+    return <div>Loading...</div>;
+  }
   return (
     <div className='dashboardPage'>
       <div className='statGrid'>
@@ -96,20 +95,13 @@ const Dashboard = () => {
         <div><h1>Trending Quizs</h1></div>
       <div className='trendQuizGrp'>
       {myTrendingQuizzes.map(quiz => {
-        const createdAtDate = new Date(quiz.createdAt);
-        const formattedDate = createdAtDate.toLocaleDateString('en-GB', {
-          day: 'numeric',
-          month: 'short', // Use 'short' for abbreviated month name
-          year: 'numeric'
-        });
-
         return (
-            <div className='trendQuiz'>
+            <div className='trendQuiz' key={quiz._id}>
               <div className='trendHead'>
                 <div>{quiz.title}</div>
                 <div className='views'>{quiz.impressions}<img src={eye} alt="views" /></div>
               </div>
-              <div className='createdOn'>Created on : {formattedDate}</div> {/* Display formatted date */}
+              <div className='createdOn'>Created on : {formatDate(quiz.createdAt)}</div> {/* Display formatted date */}
             </div>
         );
       })}
