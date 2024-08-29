@@ -1,0 +1,87 @@
+aside {
+    display: flex;
+    flex: 0.3;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: center;
+    height: 100vh;
+    /* Ensures the whole container takes up exactly 100vh */
+    padding: 0 20px;
+    background-color: #f9f9f9;
+    overflow: hidden;
+}
+
+aside .navButtons {
+    /* background-color: black; */
+    display: flex;
+    flex: 1;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    padding: 100px 0px;
+    cursor: pointer;
+}
+
+aside .navButtons .navButton {
+    flex: 1;
+    padding: 0px 20px;
+    display: flex;
+    flex-direction: column;
+    /* background-color: blanchedalmond; */
+    align-items: center;
+    justify-content: center;
+    font-family: Poppins;
+    font-size: 20px;
+    font-weight: 600;
+    line-height: 30px;
+    text-align: left;
+    color: var(--fontColor1);
+    text-decoration: none;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    list-style: none;
+    margin: 30px;
+}
+
+aside .navButtons .navButton:hover {
+    box-shadow: 0px 0px 10px 0px #0000000D;
+    cursor: pointer;
+    /* Lighter box shadow on hover */
+}
+
+.activeLink {
+    color: var(--fontColor1);
+    box-shadow: 0px 0px 14px 0px #0000001F;
+    border-radius: 10px;
+    margin: 0;
+    /* padding: 5px 10px; */
+}
+
+.brandName {
+    text-align: center;
+    margin-top: 10px;
+    font-family: Jomhuria;
+    font-size: 70px;
+    font-weight: 400;
+    line-height: 70px;
+    text-align: center;
+}
+
+.logOut {
+    border: 1px solid white;
+    text-align: center;
+    padding: 20px;
+    font-family: Poppins;
+    font-size: 20px;
+    font-weight: 700;
+    line-height: 30px;
+    text-align: center;
+    border-top: 1px solid var(--fontColor1);
+    cursor: pointer;
+}
+
+.logOut:hover {
+    box-shadow: 0px 0px 10px 0px #0000000D;
+    cursor: pointer;
+}

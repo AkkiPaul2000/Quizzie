@@ -1,0 +1,247 @@
+/* General styling for the full page */
+
+.quizAnalytics {
+    display: flex;
+    flex: 1;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: center;
+    height: 100vh;
+    /* Ensures the whole container takes up exactly 100vh */
+    padding: 0 20px;
+    background-color: #f9f9f9;
+    overflow: hidden;
+    /* Prevents overflow from extending beyond the viewport */
+}
+
+
+/* Header styling */
+
+.quizAnalytics h1 {
+    color: #5076FF;
+    margin: 50px 0;
+    flex-shrink: 0;
+    /* Ensures the header doesn’t shrink */
+    text-align: center;
+    font-family: Poppins, sans-serif;
+    font-size: 50px;
+    font-weight: 600;
+    line-height: 75px;
+}
+
+
+/* Container for the table */
+
+.table-container {
+    flex-grow: 1;
+    /* Makes the table container take up remaining space */
+    width: 100%;
+    max-width: 100%;
+    overflow-x: auto;
+    /* Enables horizontal scrolling if needed */
+    overflow-y: auto;
+    /* Enables vertical scrolling if needed */
+}
+
+th:nth-child(1),
+td:nth-child(1) {
+    border-radius: 10px 0px 0px 10px;
+    /* Adjust the value as needed for the desired roundness */
+}
+
+th:nth-child(6),
+td:nth-child(6) {
+    border-radius: 0px 10px 10px 0px;
+    width: 40%;
+    /* Adjust the value as needed for the desired roundness */
+}
+
+.table-container {
+    /* ... other styles ... */
+    overflow-x: auto;
+    overflow-y: auto;
+    padding-right: 15px;
+    /* Add padding to the right for margin on the left of the scrollbar */
+}
+
+.table-container::-webkit-scrollbar {
+    width: 10px;
+}
+
+.table-container::-webkit-scrollbar-track {
+    background: transparent;
+    /* Make the track transparent */
+    /* You can also add a border here if you want a subtle outline */
+    /* border: 1px solid rgba(0, 0, 0, 0.1); */
+}
+
+.table-container::-webkit-scrollbar-thumb {
+    background: #888;
+    border-radius: 5px;
+}
+
+.table-container::-webkit-scrollbar-thumb:hover {
+    background: #555;
+}
+
+
+/* Basic styling for the table */
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+    font-family: 'Poppins', sans-serif;
+    border-spacing: 0;
+}
+
+
+/* Table headers */
+
+thead th {
+    background-color: #5076FF;
+    padding: 10px;
+    text-align: center;
+    font-weight: bold;
+    font-size: 16px;
+    color: white;
+}
+
+
+/* Table body rows */
+
+tbody td {
+    padding: 10px;
+    /* border-bottom: 1px solid #e0e0e0; */
+    font-family: Poppins;
+    font-size: 16px;
+    font-weight: 600;
+    line-height: 40px;
+    text-align: center;
+}
+
+
+/* Alternate row coloring for better readability */
+
+tr:nth-child(even) td {
+    background-color: #B3C4FF;
+    /* Slightly lighter color for even rows */
+}
+
+
+/* Set specific column widths */
+
+
+/* Button styles */
+
+button {
+    padding: 6px 12px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    margin-right: 5px;
+    font-size: 14px;
+}
+
+.edit-btn {
+    background-color: #4CAF50;
+    color: white;
+}
+
+.share-btn {
+    background-color: #008CBA;
+    color: white;
+}
+
+
+/* Link styles */
+
+.analysis-link {
+    display: flex;
+    justify-content: flex-start;
+    color: #000000;
+    text-decoration: underline;
+}
+
+
+/* Responsive design: Adjusts table for smaller screens */
+
+@media (max-width: 768px) {
+    .quizAnalytics h1 {
+        font-size: 2rem;
+        margin: 20px 0;
+        text-align: center;
+    }
+    .table-container {
+        height: 300px;
+        /* Adjust height for smaller screens */
+        width: 100%;
+    }
+    table {
+        font-size: 12px;
+        /* Adjust font size for smaller screens */
+    }
+    thead th,
+    tbody td {
+        padding: 8px;
+        /* Reduce padding for smaller screens */
+    }
+    button {
+        padding: 4px 8px;
+        font-size: 12px;
+    }
+}
+
+
+/* Mobile screens below 480px */
+
+@media (max-width: 480px) {
+    .quizAnalytics {
+        padding: 10px;
+        /* Reduce padding for mobile */
+    }
+    .quizAnalytics h1 {
+        font-size: 1.5rem;
+        margin: 10px 0;
+    }
+    .table-container {
+        height: 250px;
+        width: 100%;
+        overflow-x: auto;
+        overflow-y: auto;
+    }
+    table {
+        font-size: 10px;
+        /* Smaller font for mobile */
+    }
+    thead th,
+    tbody td {
+        padding: 5px;
+    }
+    button {
+        padding: 3px 6px;
+        font-size: 10px;
+    }
+}
+
+
+/* Further adjustments for very small mobile screens below 360px */
+
+@media (max-width: 360px) {
+    .quizAnalytics h1 {
+        font-size: 1.2rem;
+        margin: 5px 0;
+        text-align: center;
+    }
+    button {
+        font-size: 9px;
+        padding: 2px 5px;
+    }
+    .table-container {
+        height: 220px;
+        /* Slightly smaller height for very small screens */
+    }
+    thead th,
+    tbody td {
+        padding: 4px;
+    }
+}

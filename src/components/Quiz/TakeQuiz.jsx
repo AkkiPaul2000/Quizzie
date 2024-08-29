@@ -3,6 +3,8 @@ import React, { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 import './Quiz.css';
 import { BACKEND_URL } from '../../utils/constant';
+import prize from '../../assets/prize.svg'; 
+
 
 function TakeQuiz() {
   const { id } = useParams();
@@ -22,7 +24,6 @@ function TakeQuiz() {
       try {
         const response = await axios.get(`${BACKEND_URL}/api/quiz/${quizId}`);
         setQuizData(response.data);
-        console.log("hey") 
         setTimeRemaining(response.data.questions[0].timer || 0); 
       } catch (error) {
         console.error('Error fetching quiz data:', error);
@@ -80,6 +81,19 @@ function TakeQuiz() {
     setUserAnswers([...userAnswers, selectedAnswer]);
     // console.log(currentQuestion)
 
+    try {
+      // Increment clicked count for the selected option
+      if (selectedAnswer !== null) {
+        await axios.patch(`${BACKEND_URL}/api/quiz/increment-option-clicked/${quizId}`, {
+          questionIndex: currentQuestionIndex,
+          optionIndex: selectedAnswer,
+        });
+      }
+
+      // ... (rest of your handleSubmit logic for checking answers, updating score, etc.)
+    } catch (error) {
+      console.error('Error updating quiz stats or fetching next question:', error);
+    }
     // Check if the selected answer is correct for Q&A quizzes
     if (quizData.type === 'qna' && selectedAnswer !== null && selectedAnswer.toString() === correctAnswerIndex) {
       try {
@@ -107,15 +121,25 @@ function TakeQuiz() {
   };
 
   return (
+    <div className="quiz-outerBox">
     <div className="quiz-container">
       {!isQuizFinished && quizData && (
         <div className="quiz-question">
-          <h3>{quizData.questions[currentQuestionIndex].questionText}</h3>
+          <div className='takeQuizHeader'>
+          <div className='questionIndex'>0{currentQuestionIndex+1}/0{quizData.questions.length}</div>  
+          {quizData.questions[currentQuestionIndex].timer !== null && (
+            <div className='quizTimer'>00:{timeRemaining}s</div>
+          )}
+        {/* <div className='quizTimer'>00:{timeRemaining}s</div> */}
+          </div>
+          
+          <div className='currentQues'><span>{quizData.questions[currentQuestionIndex].questionText}</span></div>
           {/* Render options based on the question type */}
+          <div className='optionList'>
           {quizData.questions[currentQuestionIndex].type==="text" && quizData.questions[currentQuestionIndex].options.map((option, index) => (
             <div
               key={index}
-              className={`quiz-option ${selectedAnswer === index ? 'selected' : ''}`}
+              className={` textQuiz-option ${selectedAnswer === index ? 'selected' : ''}`}
               onClick={() => handleAnswerSelect(index)}
             >
               {option.text && <span>{option.text}</span>}
@@ -125,7 +149,7 @@ function TakeQuiz() {
           {quizData.questions[currentQuestionIndex].type==="imageUrl" && quizData.questions[currentQuestionIndex].options.map((option, index) => (
             <div
               key={index}
-              className={`quiz-option ${selectedAnswer === index ? 'selected' : ''}`}
+              className={`imgQuiz-option ${selectedAnswer === index ? 'selected' : ''}`}
               onClick={() => handleAnswerSelect(index)}
             >
               {/* {option.text && <span>{option.text}</span>} */}
@@ -135,20 +159,22 @@ function TakeQuiz() {
           {quizData.questions[currentQuestionIndex].type==="both" && quizData.questions[currentQuestionIndex].options.map((option, index) => (
             <div
               key={index}
-              className={`quiz-option ${selectedAnswer === index ? 'selected' : ''}`}
+              className={`bothQuiz-option ${selectedAnswer === index ? 'selected' : ''}`}
               onClick={() => handleAnswerSelect(index)}
             >
-              {option.text && <span>{option.text}</span>}
+              <div className='bothDisp'>{option.text && <span>{option.text}</span>}
               {option.imageUrl && <img src={option.imageUrl} alt={`Option ${index + 1}`} />}
+              </div>
             </div>
           ))}
-
+          
           {/* Display timer if the timer is set for the current question */}
-          {quizData.questions[currentQuestionIndex].timer !== null && (
-            <p>Time remaining: {timeRemaining} seconds</p>
-          )}
+          
 
           {/* Submit Button */}
+          
+          </div>
+          <div className=" buttonDiv">
           <button
             className="submit-button"
             onClick={handleSubmit}
@@ -156,22 +182,30 @@ function TakeQuiz() {
           >
             Submit
           </button>
+          </div>
         </div>
       )}
 
+      
       {isQuizFinished && quizData.type === 'qna' && (
         <div className="quiz-result">
-          <h3>Quiz Finished!</h3>
-          <p>Your score: {score} / {quizData.questions.length}</p>
+          <div className='quizText'>
+            <div className="quizHead">Congrats Quiz is completed</div>
+            <img src={prize} alt="prize"/>
+            <div>Your Score is </div>
+            <div className='quizScore'>0{score}/0{quizData.questions.length}</div>
+          </div>
         </div>
       )}
 
       {isQuizFinished && quizData.type === 'poll' && (
         <div className="quiz-result">
-          <h3>Poll Completed!</h3>
-          <p>Thank you for participating.</p>
+          <div className='pollText'>Thank you 
+          for participating in the Poll</div>
+          
         </div>
       )}
+    </div>
     </div>
   );
 }

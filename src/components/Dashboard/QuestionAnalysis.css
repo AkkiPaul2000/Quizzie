@@ -1,0 +1,78 @@
+.question-analysis {
+    display: flex;
+    flex: 1;
+    flex-direction: column;
+    padding: 2rem;
+    margin-left: 2rem;
+}
+
+.headerDiv {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.headerDiv h1 {
+    color: #5076FF;
+    font-family: Poppins;
+    font-size: 40px;
+    font-weight: 600;
+    line-height: 60px;
+    text-align: left;
+}
+
+.QuickData {
+    display: flex;
+    flex-direction: column;
+    color: #FF5D01;
+    font-family: Poppins;
+    font-size: 15px;
+    font-weight: 600;
+    line-height: 22.5px;
+    text-align: left;
+}
+
+.question-card {
+    border-bottom: 2px solid #D7D7D7;
+    padding: 2.5rem 0rem;
+    margin-right: 20rem;
+}
+
+.question-card h1 {
+    font-family: Poppins;
+    font-size: 30px;
+    font-weight: 500;
+    line-height: 45px;
+    text-align: left;
+}
+
+.datas {
+    display: flex;
+    gap: 3rem;
+}
+
+.datas .data {
+    padding: 1rem 1rem;
+    flex: 1;
+    background-color: white;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    border-radius: 10px;
+}
+
+.datas .data .impData {
+    font-size: 30px;
+    line-height: 45px;
+}
+
+.datas .data p {
+    font-family: Poppins;
+    font-size: 14px;
+    font-weight: 600;
+    line-height: 21px;
+    text-align: center;
+    color: #474444;
+    margin: 0;
+}
