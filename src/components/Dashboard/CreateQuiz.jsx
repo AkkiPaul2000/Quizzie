@@ -180,7 +180,7 @@ const CreateQuiz = ({ onClose }) => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    console.log(quizData)
+    console.log("yo you submiteed dude",quizData)
 
     let isValid = true; // Flag to track validation status
   

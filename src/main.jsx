@@ -21,6 +21,7 @@ import "./index.css";
 import QuestionAnalysis from "./components/Dashboard/QuestionAnalysis";
 import { useState } from "react";
 import { QuizProvider } from "./utils/quizContext";
+import NotFoundPage from "./components/common/NotFoundPage";
 
 const ProtectedRoute = ({ children, path }) => {
   const { isLoggedIn, user } = useAuth();
@@ -90,6 +91,7 @@ const MainApp = () => {
               }
             />
             <Route path="/quiz/:id" element={<TakeQuiz />} />
+            <Route path="*" element={<NotFoundPage />} />
             <Route
               path="/analytics/:id"
               element={

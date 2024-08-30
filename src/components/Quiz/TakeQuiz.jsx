@@ -4,7 +4,7 @@ import { useParams } from 'react-router-dom';
 import './Quiz.css';
 import { BACKEND_URL } from '../../utils/constant';
 import prize from '../../assets/prize.svg'; 
-
+import Loader from '../common/Loader'
 
 function TakeQuiz() {
   const { id } = useParams();
@@ -27,6 +27,7 @@ function TakeQuiz() {
         setTimeRemaining(response.data.questions[0].timer || 0); 
       } catch (error) {
         console.error('Error fetching quiz data:', error);
+        setQuizData(undefined)
       }
     };
 
@@ -119,7 +120,16 @@ function TakeQuiz() {
       setIsQuizFinished(true); // Finish the quiz
     }
   };
-
+  console.log(quizData)
+  if(quizData===undefined) return (
+    <div className="quiz-outerBox">
+        <h1>Quiz Not Found</h1>
+        
+        <p>The quiz you are looking for... does not exist.</p>
+      </div>
+  )
+  if(quizData==null) return <Loader/>
+  
   return (
     <div className="quiz-outerBox">
     <div className="quiz-container">

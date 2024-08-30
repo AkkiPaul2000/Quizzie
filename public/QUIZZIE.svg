@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32">
+  <style>
+    .quizzie-q {
+      font-family: 'Poppins', sans-serif;
+      font-size: 28px;
+      font-weight: bold;
+      fill: #474444; /* Example color, adjust as needed */
+    }
+  </style>
+
+  <text x="5" y="26" class="quizzie-q">Q</text>
+</svg>

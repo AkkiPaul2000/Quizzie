@@ -44,8 +44,8 @@ const Sidebar = () => {
     <>
     {isLoggedIn && (
       <aside style={{ width: '200px', backgroundColor: '#FFFFFF', color: '#474444', padding: '0px 20px' }}>
-        {/* ... */}
-        <div className='navButtons'>
+      <h2 className='brandName'>QUIZZIE</h2>
+      <div className='navButtons'>
           <div
             className={`navButton ${activeSidebarItem === 'Dashboard' ? 'activeLink' : ''}`}
             onClick={() => {
@@ -73,8 +73,8 @@ const Sidebar = () => {
             Create Quiz
           </div>
         </div>
-        {/* ... */}
-      </aside>
+        <div className='logOut' onClick={handleLogout}>LOGOUT</div>
+        </aside>
     )}
 
     {isModalOpen && <CreateQuiz onClose={handleCloseModal} />}
