@@ -58,9 +58,9 @@ const QuestionAnalysis = () => {
         <h1>{quiz.title}- Question Analysis</h1>
         <div className='QuickData'><span>Created on: {formatDate(quiz.createdAt)}</span><span>Impressions: {quiz.impressions}</span></div>
       </div>
-      {quiz.type=="qna" && <div class="questions">
+      {quiz.type=="qna" && <div className="questions">
         {quiz.questions.map(question=>
-        <div class="question-card">
+        <div className="question-card" key={question._id}>
         <h2>{question.questionText}</h2>
         <div className='datas'>
         <div className='data'>
@@ -78,13 +78,13 @@ const QuestionAnalysis = () => {
         </div>
         </div>)}
         </div>}
-        {quiz.type=="poll" && <div class="questions">
+        {quiz.type=="poll" && <div className="questions">
         {quiz.questions.map(question=>
-        <div class="question-card">
+        <div className="question-card" key={question._id}>
         <h2>{question.questionText}</h2>
         <div className='datas'>
-          {question.options.map(option=>
-        <div className='data'>
+          {question.options.map((option,index)=>
+        <div className='data' key={index} >
                 <p className='impData'>{option.clicked}</p>
                 <p>{option.text}</p>
         </div>)}

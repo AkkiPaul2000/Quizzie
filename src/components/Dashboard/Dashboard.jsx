@@ -70,14 +70,14 @@ const Dashboard = () => {
       <div className='stats'>
         
         <div className='data-container'> 
-          <span className='data'>{statState.quizCreated}</span> 
+          <span className='data'>{statState.quizCreated}&nbsp;</span> 
           <span className='data-label'>Quizzes</span>
         </div>
         <div className='nLine'>Created </div>
       </div>
       <div className='stats'>
         <div className='data-container'> 
-          <span className='data'>{statState.questionCreated}</span> 
+          <span className='data'>{statState.questionCreated}&nbsp;</span> 
           <span className='data-label'>Questions</span>
         </div>
         <div className='nLine'>Created </div>
@@ -87,7 +87,7 @@ const Dashboard = () => {
             <span className='data'>{statState.impression > 1000 
     ? `${(statState.impression / 1000).toFixed(1)}K` 
     : statState.impression
-  }</span> 
+  }&nbsp;</span> 
             <span className='data-label'>Total</span>
           </div>
           <div className='nLine'>Impressions </div>
@@ -97,8 +97,8 @@ const Dashboard = () => {
       <div className='TrendingQuiz'>
         <div><h1>Trending Quizs</h1></div>
       <div className='trendQuizGrp'>
-      {myTrendingQuizzes.map(quiz => {
-        return (
+      {myTrendingQuizzes.map(quiz =>
+      <div className="trendContainer">
             <div className='trendQuiz' key={quiz._id}>
               <div className='trendHead'>
                 <div>{quiz.title}</div>
@@ -106,8 +106,8 @@ const Dashboard = () => {
               </div>
               <div className='createdOn'>Created on : {formatDate(quiz.createdAt)}</div> {/* Display formatted date */}
             </div>
-        );
-      })}
+            </div>
+       )}
       </div>
       </div>
     </div>
