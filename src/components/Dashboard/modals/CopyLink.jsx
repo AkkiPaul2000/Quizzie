@@ -1,7 +1,7 @@
 import React, { useState } from 'react'
 import './CopyLink.css'
-import { FRONTEND_URL } from '../../utils/constant'
-import cross from '../../assets/cross.svg'; 
+import { FRONTEND_URL } from '../../../utils/constant'
+import cross from '../../../assets/cross.svg'; 
 import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 

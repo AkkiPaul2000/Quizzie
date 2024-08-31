@@ -7,7 +7,7 @@ import './CreateQuiz.css'
 import plus from '../../assets/plus.svg'; // Assuming your SVG is in the 'assets' folder
 import bin from '../../assets/bin.svg'; 
 import cross from '../../assets/cross.svg'; 
-import CopyLink from './CopyLink';
+import CopyLink from './modals/CopyLink';
 import { useAuth } from '../../utils/auth';
 import { useQuizzes } from '../../utils/quizContext';
 
@@ -180,39 +180,36 @@ const CreateQuiz = ({ onClose }) => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    console.log("yo you submiteed dude",quizData)
+    // console.log("yo you submiteed dude",quizData)
 
-    let isValid = true; // Flag to track validation status
-  
-    // Check if correctAnswer is within the bounds of options
+    let isValid = true; 
     quizData.questions.forEach((ques) => {
       if (ques.options.length - 1 < ques.correctAnswer) {
         toast.error('Check your answers - Correct answer index is out of bounds.');
-        console.log("Error0")
+        // console.log("Error0")
         isValid = false; // Set the flag to false if there's an error
       }
     });
   
-    // Other validation checks (title, questionText, empty options)
     if (!quizData.title || quizData.questions.some(q => !q.questionText)) {
       toast.error('Please fill in all required fields.');
-      console.log("Error1")
+      // console.log("Error1")
       isValid = false;
     }
   var condion1=false;
     var hasEmptyOptions = quizData.questions.some(question => 
       question.options.some(option => option.text.trim() === '' && option.imageUrl.trim() === '')
     );
-    console.log("Error1",hasEmptyOptions,condion1)
+    // console.log("Error1",hasEmptyOptions,condion1)
 
     quizData.questions.map(question => {
-      console.log("error check",question)
+      // console.log("error check",question)
         if(question.type==="text"){
-          question.options.map(option=>{console.log("error check1",option);if(option.text.trim() === ''){condion1=true}})
+          question.options.map(option=>{if(option.text.trim() === ''){condion1=true}})
         }
         if (question.type === "imageUrl") {
           question.options.map(option => {
-              console.log("error check1", option);
+              // console.log("error check1", option);
       
               // Check if imageUrl is empty after trimming
               if (option.imageUrl.trim() === '') {
@@ -222,9 +219,8 @@ const CreateQuiz = ({ onClose }) => {
       }
         if (question.type === "both") {
   question.options.map(option => {
-    console.log("error check1", option);
+    // console.log("error check1", option);
 
-    // Check if either text or imageUrl is empty after trimming
     if (option.text.trim() === '' || option.imageUrl.trim() === '') {
       condion1 = true; 
     }
@@ -233,12 +229,12 @@ const CreateQuiz = ({ onClose }) => {
    
     
     
-    console.log("Error2",hasEmptyOptions,condion1)
+    // console.log("Error2",hasEmptyOptions,condion1)
     if (hasEmptyOptions || condion1) {
       toast.error('Please fill in all option fields.');
       isValid = false;
     }
-    console.log("Error6",hasEmptyOptions)
+    // console.log("Error6",hasEmptyOptions)
 
     if (isValid) {
       try {
@@ -246,9 +242,8 @@ const CreateQuiz = ({ onClose }) => {
           headers: { Authorization: localStorage.getItem('token') },
         });
 
-        console.log(quizData);
+        // console.log(quizData);
 
-        // Update the quiz list in the QuizContext
         setQuizzes([...quizzes, response.data]);
 
         const newQuizId = response.data._id; 
@@ -404,8 +399,7 @@ const CreateQuiz = ({ onClose }) => {
             </div>
 
              </div>
-            {/* Conditional input rendering */}
-            {/* Text */}
+           
             
             {quizData.type === 'qna' && <div className='typeFields'  >
                 <div className='optionGroup'>
@@ -421,7 +415,7 @@ const CreateQuiz = ({ onClose }) => {
                         onChange={() => handleCorrectAnswerChange(quizIndex, optionIndex)} 
                         />
                       <span className="radio-button">
-                        <input // Add an input field for editing
+                        <input 
                           type="text"
                           value={opt.text}
                           placeholder="Text"
@@ -497,7 +491,7 @@ const CreateQuiz = ({ onClose }) => {
                               onChange={() => handleCorrectAnswerChange(quizIndex, optionIndex)}
                             />
                             <span className="radio-button">
-                              <input // Add an input field for editing
+                              <input 
                                 type="text"
                                 value={opt.text}
                                 checked={quizData.questions[quizIndex].correctAnswer === optionIndex}
@@ -507,14 +501,14 @@ const CreateQuiz = ({ onClose }) => {
                               />
                             </span> 
                             <span className="radio-button">
-                              <input // Input field for image URLs
-                                type="url" // Change to 'url' for URL validation
+                              <input 
+                                type="url" 
                                 value={opt.imageUrl}
                                 checked={quizData.questions[quizIndex].correctAnswer === optionIndex}
                                 style={{ 
                                   backgroundColor: quizData.questions[quizIndex].correctAnswer == optionIndex ? '#60B84B' : 'white', 
                                   color: quizData.questions[quizIndex].correctAnswer === optionIndex ? '#FFFFFF' : '#474444',
-                                  // ... other styles (outline, word-wrap, etc.)
+                                
                                 }} 
                                 onChange={(e) => handleOptionTextChange(quizIndex, optionIndex, e.target.value,"imageUrl")}
                                 placeholder="Enter image URL"
@@ -564,7 +558,7 @@ const CreateQuiz = ({ onClose }) => {
                       <label key={optionIndex}>
                       
                       <span className="radio-button">
-                        <input // Add an input field for editing
+                        <input
                           type="text"
                           placeholder='Text'
                           value={opt.text}
@@ -590,8 +584,8 @@ const CreateQuiz = ({ onClose }) => {
                           <label key={optionIndex}>
                             
                             <span className="radio-button">
-                              <input // Input field for image URLs
-                                type="url" // Change to 'url' for URL validation
+                              <input 
+                                type="url" 
                                 value={opt.imageUrl}
                                 onChange={(e) => handleOptionTextChange(quizIndex, optionIndex, e.target.value,"imageUrl")}
                                 placeholder="Enter image URL"
@@ -625,7 +619,7 @@ const CreateQuiz = ({ onClose }) => {
                           <label key={optionIndex}>
                             
                             <span className="radio-button">
-                              <input // Add an input field for editing
+                              <input 
                                 type="text"
                                 value={opt.text}
                                 placeholder='Text'
@@ -633,8 +627,8 @@ const CreateQuiz = ({ onClose }) => {
                               />
                             </span> 
                             <span className="radio-button">
-                              <input // Input field for image URLs
-                                type="url" // Change to 'url' for URL validation
+                              <input 
+                                type="url"
                                 value={opt.imageUrl}
                                 onChange={(e) => handleOptionTextChange(quizIndex, optionIndex, e.target.value,"imageUrl")}
                                 placeholder="Enter image URL"

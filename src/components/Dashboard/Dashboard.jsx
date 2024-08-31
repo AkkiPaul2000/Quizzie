@@ -98,7 +98,7 @@ const Dashboard = () => {
         <div><h1>Trending Quizs</h1></div>
       <div className='trendQuizGrp'>
       {myTrendingQuizzes.map(quiz =>
-      <div className="trendContainer">
+      <div className="trendContainer" key={quiz._id}>
             <div className='trendQuiz' key={quiz._id}>
               <div className='trendHead'>
                 <div>{quiz.title}</div>
