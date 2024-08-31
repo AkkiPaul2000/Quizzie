@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import { toast } from 'react-toastify';
@@ -6,6 +6,7 @@ import { useAuth } from '../../utils/auth';
 import { BACKEND_URL } from '../../utils/constant';
 import './Auth.css';
 import 'react-toastify/dist/ReactToastify.css';
+import Loader from '../common/Loader';
 
 const Login = () => {
   const [email, setEmail] = useState('');
@@ -13,18 +14,42 @@ const Login = () => {
 
   const [emailError, setEmailError] = useState('');
   const [passwordError, setPasswordError] = useState('');
-
+  const [serverReady, setServerReady] = useState(false);
   const navigate = useNavigate();
   const { login } = useAuth();
+  useEffect(() => {
+    const checkServer = async () => {
+      try {
+        const response = await fetch('/api/health'); // Replace with your health check endpoint
+        if (response.ok) {
+          setServerReady(true);
+        } else {
+          console.error('Error checking backend server readiness:', response.statusText);
+          // Handle error, e.g., retry after a delay
+        }
+      } catch (error) {
+        console.error('Error checking backend server readiness:', error);
+        // Handle error, e.g., retry after a delay
+      }
+    };
+
+    const retryInterval = setInterval(checkServer, 5000); // Retry every 5 seconds
+
+    checkServer();
+
+    return () => {
+      clearInterval(retryInterval);
+    };
+  }, []);
 
   const handleSubmit = async (e) => {
-    e.preventDefault();
 
-    // Reset errors
+    e.preventDefault();
+    console.log("submitted")
     setEmailError('');
     setPasswordError('');
 
-    // Basic validation
+    
     let isValid = true;
 
     if (!email) {
@@ -56,7 +81,7 @@ const Login = () => {
     setter(e.target.value);
     errorSetter('');  // Clear the specific error when the input changes
   };
-
+  if(!serverReady)return <Loader/>
   return (
     <div className='LoginForm'>
       <div className="loginDiv">
