@@ -6,6 +6,7 @@ import { BACKEND_URL } from '../../utils/constant';
 import 'react-toastify/dist/ReactToastify.css';
 import './Auth.css';
 import validator from 'validator'; // Import the validator library
+import AuthLoader from '../common/AuthLoader';
 
 
 const Register = () => {
@@ -19,6 +20,7 @@ const Register = () => {
   const [emailError, setEmailError] = useState('');
   const [passwordError, setPasswordError] = useState('');
   const [confirmPasswordError, setConfirmPasswordError] = useState('');
+  const [loading, setLoading] = useState(false); 
 
   const navigate = useNavigate();
 
@@ -61,6 +63,7 @@ const Register = () => {
     if (!isValid) {
       return;
     }
+    setLoading(true)
 
     try {
       await axios.post(`${BACKEND_URL}/api/auth/register`, { name, email, password });
@@ -69,6 +72,8 @@ const Register = () => {
     } catch (error) {
       console.log(error);
       toast.error(error.response?.data?.error || 'Registration failed. Please try again.');
+    }finally{
+      setLoading(false)
     }
   };
 
@@ -134,8 +139,12 @@ const Register = () => {
               {confirmPasswordError && <span className='Pass2errorText'>{confirmPasswordError}</span>}
             </div>
           </div>
-          <button type="submit" className='authButton'>Sign-Up</button>
-        </form>
+          <div className="buttonWrapper" style={{ position: 'relative' }}>
+            <button type="submit" className='authButton' disabled={loading}>
+              Sign-Up
+              {loading && <AuthLoader small />} {/* Loader will appear on the right side */}
+            </button>
+          </div>        </form>
       </div>
     </div>
   );

@@ -7,6 +7,7 @@ import { BACKEND_URL } from '../../utils/constant';
 import './Auth.css';
 import 'react-toastify/dist/ReactToastify.css';
 import Loader from '../common/Loader';
+import AuthLoader from '../common/AuthLoader';
 
 const Login = () => {
   const [email, setEmail] = useState('');
@@ -15,6 +16,7 @@ const Login = () => {
   const [emailError, setEmailError] = useState('');
   const [passwordError, setPasswordError] = useState('');
   const [serverReady, setServerReady] = useState(false);
+  const [loading, setLoading] = useState(false); 
   const navigate = useNavigate();
   const { login } = useAuth();
   useEffect(() => {
@@ -65,7 +67,7 @@ const Login = () => {
     if (!isValid) {
       return;
     }
-
+setLoading(true)
     try {
       const response = await axios.post(`${BACKEND_URL}/api/auth/login`, { email, password });
       login(response.data.token);  // Use login from useAuth
@@ -74,6 +76,9 @@ const Login = () => {
     } catch (error) {
       console.error(error);
       toast.error(error.response?.data?.error || 'Login failed. Please check your credentials and try again.');
+    }
+    finally{
+      setLoading(false)
     }
   };
 
@@ -115,8 +120,12 @@ const Login = () => {
               {passwordError && <span className='errorText'>{passwordError}</span>}
             </div>
           </div>
-          <button type="submit" className='authButton'>Login</button>
-        </form>
+          <div className="buttonWrapper" style={{ position: 'relative' }}>
+            <button type="submit" className='authButton' disabled={loading}>
+              Login
+              {loading && <AuthLoader small />} {/* Loader will appear on the right side */}
+            </button>
+          </div>        </form>
       </div>
     </div>
   );

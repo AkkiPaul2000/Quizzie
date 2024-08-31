@@ -134,8 +134,6 @@ const CreateQuiz = ({ onClose }) => {
 
 
   const handleAddQuestion = () => {
-    
-
     if (quizData.questions.length < 5) { 
       setQuizIndex(quizData.questions.length)
       setQuizData({
@@ -324,7 +322,7 @@ const CreateQuiz = ({ onClose }) => {
             { /*  number section */}
             <div className='indexGrp' style={{display:'flex',justifyContent:'flex-start',alignItems:'center',margin:'10px 30px',padding:'0px 10px'}}>
               <div style={{display:'flex',flex:1,flexDirection:'row',alignItems:'center'}}>
-             {quizData.questions.map((question, index) =><div className='quizIndex'  key={index} >
+             {quizData.questions.map((question, index) =><div className='quizIndex' style={{backgroundColor:index==quizIndex?'#cfcfcf':'white'}}  key={index} >
               <span style={{cursor:'pointer',padding:10}} 
               onClick={()=>{
                 setQuizIndex(index)
