@@ -70,8 +70,16 @@ const Register = () => {
       toast.success('Registration successful! You can now log in.');
       navigate('/login');
     } catch (error) {
-      console.log(error);
-      toast.error(error.response?.data?.error || 'Registration failed. Please try again.');
+      if(error.response.status === 400){
+        toast.error(error.response?.data?.error || 'Register failed. Please check your credentials and try again.');
+      }
+      else if (error.response.status === 404) {
+        toast.error("Server not found. Please check your network connection or try again later.");
+      } else if (error.response.status === 500) {
+        toast.error("Internal server error. Please try again later or contact support.");
+      }
+      else{
+      toast.error(error.response?.data?.error || 'Something weird happened!! contact support.');}
     }finally{
       setLoading(false)
     }
@@ -144,7 +152,7 @@ const Register = () => {
               Sign-Up
               {loading && <AuthLoader small />} {/* Loader will appear on the right side */}
             </button>
-            {loading && <span style={{fontSize:10}}><span style={{fontWeight:'bolder'}}>Hold on tight!!</span> Idle free vercel server can be slow sometimes...</span>}
+            {loading && <span style={{fontSize:10}}><span style={{fontWeight:'bolder'}}>Hold on tight!!</span> Idle free plan server can be slow sometimes...</span>}
 
           </div>         </form>
       </div>

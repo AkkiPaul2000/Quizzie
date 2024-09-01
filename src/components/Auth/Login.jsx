@@ -74,8 +74,16 @@ setLoading(true)
       toast.success('Login successful!');
       navigate('/dashboard');
     } catch (error) {
-      console.error(error);
-      toast.error(error.response?.data?.error || 'Login failed. Please check your credentials and try again.');
+      if(error.response.status === 400){
+        toast.error(error.response?.data?.error || 'Login failed. Please check your credentials and try again.');
+      }
+      else if (error.response.status === 404) {
+        toast.error("Server not found. Please check your network connection or try again later.");
+      } else if (error.response.status === 500) {
+        toast.error("Internal server error. Please try again later or contact support.");
+      }
+      else{
+      toast.error(error.response?.data?.error || 'Something weird happened!! contact support.');}
     }
     finally{
       setLoading(false)
@@ -129,7 +137,7 @@ setLoading(true)
               Login
               {loading && <AuthLoader small />} {/* Loader will appear on the right side */}
             </button>
-            {loading && <span style={{fontSize:10}}><span style={{fontWeight:'bolder'}}>Hold on tight!!</span> Idle free vercel server can be slow sometimes...</span>}
+            {loading && <span style={{fontSize:10}}><span style={{fontWeight:'bolder'}}>Hold on tight!!</span> Idle free plan server can be slow sometimes...</span>}
 
           </div>        </form>
       </div>
