@@ -242,7 +242,7 @@ const EditQuiz = ({ quiz, onClose, onSave }) => {
             {/* number section */}
             <div className='indexGrp' style={{display:'flex',flexDirection:'row'}}>
               {quizData.questions.map((question, index) => (
-                <div className='quizIndex' key={index}>
+                <div className='quizIndex'  style={{backgroundColor:index==quizIndex?'#cfcfcf':'white'}}  key={index}>
                   <span
                     style={{ cursor: 'pointer',padding:10 }}
                     onClick={() => handleQuestionNavigate(index)}
