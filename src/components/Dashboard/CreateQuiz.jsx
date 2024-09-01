@@ -136,6 +136,7 @@ const CreateQuiz = ({ onClose }) => {
   const handleAddQuestion = () => {
     if (quizData.questions.length < 5) { 
       setQuizIndex(quizData.questions.length)
+      setOptionType('text')
       setQuizData({
         ...quizData,
         questions: [
