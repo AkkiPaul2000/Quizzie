@@ -205,15 +205,7 @@ const EditQuiz = ({ quiz, onClose, onSave }) => {
             condion1 = true; 
           } 
       
-          // Check if imageUrl is present and valid
-          if (option.imageUrl.trim() !== '') { 
-            const urlPattern = /^(https?|ftp):\/\/[^\s/$.?#].[^\s]*$/i;
-            if (!urlPattern.test(option.imageUrl)) {
-              console.log("Invalid URL:", option.imageUrl);
-              condion1 = true; 
-              toast.error('Fill up the URL correctly'); 
-            }
-          }
+          
         });
       }
   });
