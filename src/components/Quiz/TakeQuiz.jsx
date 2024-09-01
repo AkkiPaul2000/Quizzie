@@ -16,6 +16,8 @@ function TakeQuiz() {
   const [timeRemaining, setTimeRemaining] = useState(0);
   const [isQuizFinished, setIsQuizFinished] = useState(false);
   const [score, setScore] = useState(0);
+  const [isSubmitDisabled, setIsSubmitDisabled] = useState(false);
+
   
 
   useEffect(() => {
@@ -73,7 +75,8 @@ function TakeQuiz() {
   };
 
   const handleSubmit = async() => {
-    if (!quizData) return; // Ensure quiz data is loaded
+    if (!quizData || isSubmitDisabled) return; // Ensure quiz data is loaded
+    setIsSubmitDisabled(true); // Disable submit button
 
     const currentQuestion = quizData.questions[currentQuestionIndex];
     const correctAnswerIndex = currentQuestion.correctAnswer;
@@ -116,8 +119,11 @@ function TakeQuiz() {
       setCurrentQuestionIndex(nextQuestionIndex);
       setSelectedAnswer(null); // Reset selected answer for the next question
       setTimeRemaining(quizData.questions[nextQuestionIndex].timer || 0); // Set new timer
+      setIsSubmitDisabled(false); // Re-enable submit button for next question
+
     } else {
-      setIsQuizFinished(true); // Finish the quiz
+      setIsQuizFinished(true);
+
     }
   };
   console.log(quizData)
@@ -188,8 +194,8 @@ function TakeQuiz() {
           <button
             className="submit-button"
             onClick={handleSubmit}
-            disabled={selectedAnswer === null}
-          >
+            disabled={selectedAnswer === null || isSubmitDisabled}
+            >
             Submit
           </button>
           </div>
