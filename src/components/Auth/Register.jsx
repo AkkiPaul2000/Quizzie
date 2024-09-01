@@ -112,7 +112,7 @@ const Register = () => {
                 id="email"
                 value={email}
                 onChange={handleInputChange(setEmail, setEmailError)}
-                style={{ border: nameError ? '1px solid red' : '' }} // Conditionally apply red border
+                style={{ border: emailError ? '1px solid red' : '' }} // Conditionally apply red border
               />
               {emailError && <span className='errorText'>{emailError}</span>}
             </div>
@@ -123,7 +123,7 @@ const Register = () => {
                 id="password"
                 value={password}
                 onChange={handleInputChange(setPassword, setPasswordError)}
-                style={{ border: nameError ? '1px solid red' : '' }} // Conditionally apply red border
+                style={{ border: passwordError ? '1px solid red' : '' }} // Conditionally apply red border
               />
               {passwordError && <span className='Pass1errorText'>{passwordError}</span>}
             </div>
@@ -134,17 +134,19 @@ const Register = () => {
                 id="confirmPassword"
                 value={confirmPassword}
                 onChange={handleInputChange(setConfirmPassword, setConfirmPasswordError)}
-                style={{ border: nameError ? '1px solid red' : '' }} // Conditionally apply red border
+                style={{ border: confirmPasswordError ? '1px solid red' : '' }} // Conditionally apply red border
               />
               {confirmPasswordError && <span className='Pass2errorText'>{confirmPasswordError}</span>}
             </div>
           </div>
-          <div className="buttonWrapper" style={{ position: 'relative' }}>
+          <div className="buttonWrapper" style={{ position: 'relative',alignItems:'center',display:'flex',flexDirection:'column' }}>
             <button type="submit" className='authButton' disabled={loading}>
               Sign-Up
               {loading && <AuthLoader small />} {/* Loader will appear on the right side */}
             </button>
-          </div>        </form>
+            {loading && <span style={{fontSize:10}}><span style={{fontWeight:'bolder'}}>Hold on tight!!</span> Idle free vercel server can be slow sometimes...</span>}
+
+          </div>         </form>
       </div>
     </div>
   );

@@ -138,6 +138,16 @@
     pointer-events: none;
 }
 
+.Pass3errorText {
+    position: absolute;
+    top: 50%;
+    left: 10px;
+    transform: translateY(-50%) translateX(130%);
+    color: red;
+    font-size: 0.9em;
+    pointer-events: none;
+}
+
 .Pass1errorText {
     position: absolute;
     top: 50%;

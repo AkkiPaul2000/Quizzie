@@ -55,12 +55,12 @@ const Login = () => {
     let isValid = true;
 
     if (!email) {
-      setEmailError(' Please enter your email.');
+      setEmailError('Invalid email.');
       isValid = false;
     }
 
     if (!password) {
-      setPasswordError('Plz enter your password.');
+      setPasswordError('Invalid password.');
       isValid = false;
     }
 
@@ -105,6 +105,8 @@ setLoading(true)
                 value={email}
                 onChange={handleInputChange(setEmail, setEmailError)}
                 className={emailError ? 'inputError' : ''}
+                style={{ border: emailError ? '1px solid red' : '' }} // Conditionally apply red border
+
               />
               {emailError && <span className='errorText'>{emailError}</span>}
             </div>
@@ -116,15 +118,19 @@ setLoading(true)
                 value={password}
                 onChange={handleInputChange(setPassword, setPasswordError)}
                 className={passwordError ? 'inputError' : ''}
+                style={{ border: passwordError ? '1px solid red' : '' }} // Conditionally apply red border
+
               />
-              {passwordError && <span className='errorText'>{passwordError}</span>}
+              {passwordError && <span className='Pass3errorText'>{passwordError}</span>}
             </div>
           </div>
-          <div className="buttonWrapper" style={{ position: 'relative' }}>
+          <div className="buttonWrapper" style={{ position: 'relative',alignItems:'center',display:'flex',flexDirection:'column' }}>
             <button type="submit" className='authButton' disabled={loading}>
               Login
               {loading && <AuthLoader small />} {/* Loader will appear on the right side */}
             </button>
+            {loading && <span style={{fontSize:10}}><span style={{fontWeight:'bolder'}}>Hold on tight!!</span> Idle free vercel server can be slow sometimes...</span>}
+
           </div>        </form>
       </div>
     </div>
